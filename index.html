@@ -216,6 +216,32 @@
             -webkit-user-select: none; user-select: none;
         }
 
+        /* Resume banner on submit view */
+        #resume-banner {
+            margin-top: 16px; padding: 16px 20px;
+            background: var(--panel-bg); border: 1px solid var(--border); border-radius: 12px;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+            box-shadow: var(--shadow); animation: fadeIn 0.4s ease;
+            -webkit-user-select: none; user-select: none;
+        }
+        #resume-banner.hidden { display: none !important; }
+        .resume-info { display: flex; flex-direction: column; gap: 3px; }
+        .resume-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
+        .resume-progress { font-size: 0.9rem; color: var(--text-primary); }
+        .resume-actions { display: flex; gap: 8px; flex-shrink: 0; }
+        .resume-btn {
+            padding: 9px 20px; font-size: 0.9rem; font-weight: 500; border-radius: 30px;
+            background: var(--accent); color: var(--bg);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .resume-btn:hover { transform: translateY(-1px); background: var(--accent-hover); }
+        .resume-discard-btn {
+            padding: 9px 14px; font-size: 0.9rem; border-radius: 30px;
+            color: var(--text-secondary); border: 1px solid var(--border);
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .resume-discard-btn:hover { background: var(--focus-ring); color: var(--text-primary); }
+
         /* ------------------ READFLOW SETTINGS ------------------ */
         #settings-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.2);
@@ -384,6 +410,16 @@
             <div class="submit-footer">
                 <span class="char-count" id="char-count">0 characters</span>
                 <button id="btn-start" class="start-btn" disabled>Start Reading</button>
+            </div>
+            <div id="resume-banner" class="hidden">
+                <div class="resume-info">
+                    <span class="resume-label">Saved progress</span>
+                    <span class="resume-progress" id="resume-progress-text"></span>
+                </div>
+                <div class="resume-actions">
+                    <button id="btn-resume-discard" class="resume-discard-btn">Discard</button>
+                    <button id="btn-resume" class="resume-btn">Continue</button>
+                </div>
             </div>
         </div>
 
@@ -558,6 +594,10 @@
             completionBanner: document.getElementById('completion-banner'),
             interactionHint: document.getElementById('interaction-hint'),
             hintText: document.getElementById('hint-text'),
+            resumeBanner: document.getElementById('resume-banner'),
+            resumeProgressText: document.getElementById('resume-progress-text'),
+            btnResume: document.getElementById('btn-resume'),
+            btnResumeDiscard: document.getElementById('btn-resume-discard'),
             
             settingsOverlay: document.getElementById('settings-overlay'),
             btnCloseSettings: document.getElementById('btn-close-settings'),
@@ -586,7 +626,14 @@
             
             applyRfSettingsToUI();
             updateRfSettingsVars();
-            checkRfInputContent();
+
+            // Restore saved text into textarea so checkResumeBanner can compare
+            const savedProgress = loadProgress();
+            if (savedProgress && savedProgress.text) {
+                rfDOM.textInput.value = savedProgress.text;
+            }
+
+            checkRfInputContent(); // also calls checkResumeBanner
             
             if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
                 rfDOM.hintText.textContent = "Press and hold to read";
@@ -594,6 +641,8 @@
 
             rfDOM.textInput.addEventListener('input', checkRfInputContent);
             rfDOM.btnStart.addEventListener('click', switchToReader);
+            rfDOM.btnResume.addEventListener('click', resumeReading);
+            rfDOM.btnResumeDiscard.addEventListener('click', discardProgress);
             dom.btnRfBack.addEventListener('click', switchToSubmit);
             
             dom.btnSettings.addEventListener('click', () => rfDOM.settingsOverlay.classList.add('active'));
@@ -645,12 +694,115 @@
             const len = rfDOM.textInput.value.trim().length;
             rfDOM.charCount.textContent = `${len.toLocaleString()} characters`;
             rfDOM.btnStart.disabled = len === 0;
+            checkResumeBanner();
+        }
+
+        /** --- Progress persistence --- **/
+        const RF_SAVE_KEY = 'readflow_progress';
+
+        function saveProgress() {
+            if (rfState.isCompleted || !rfState.paragraphs.length) return;
+            const session = {
+                text: rfDOM.textInput.value,
+                pIndex: rfState.pIndex,
+                cIndex: rfState.cIndex,
+                revealedChars: rfState.revealedChars,
+                totalChars: rfState.totalChars
+            };
+            try { localStorage.setItem(RF_SAVE_KEY, JSON.stringify(session)); } catch(e) {}
+        }
+
+        function loadProgress() {
+            try { return JSON.parse(localStorage.getItem(RF_SAVE_KEY)); } catch(e) { return null; }
+        }
+
+        function discardProgress() {
+            localStorage.removeItem(RF_SAVE_KEY);
+            rfDOM.resumeBanner.classList.add('hidden');
+        }
+
+        function checkResumeBanner() {
+            const saved = loadProgress();
+            const currentText = rfDOM.textInput.value;
+            if (saved && saved.text && saved.text === currentText && saved.revealedChars > 0 && !saved.isCompleted) {
+                const pct = Math.round((saved.revealedChars / saved.totalChars) * 100);
+                rfDOM.resumeProgressText.textContent = `${pct}% through · ${saved.revealedChars.toLocaleString()} of ${saved.totalChars.toLocaleString()} characters`;
+                rfDOM.resumeBanner.classList.remove('hidden');
+            } else {
+                rfDOM.resumeBanner.classList.add('hidden');
+            }
+        }
+
+        function resumeReading() {
+            const saved = loadProgress();
+            if (!saved) return;
+
+            const text = saved.text;
+            rfDOM.textInput.value = text;
+            rfState.paragraphs = text.split(/\n+/);
+            rfState.totalChars = saved.totalChars;
+            rfState.isCompleted = false;
+            rfState.currentPNode = null;
+            rfState.charAccumulator = 0;
+            rfState.lastDocHeight = document.body.offsetHeight;
+
+            rfDOM.readerContent.innerHTML = '';
+            rfDOM.progressBar.style.width = '0%';
+            rfDOM.completionBanner.classList.add('hidden');
+
+            rfDOM.viewSubmit.classList.add('hidden');
+            rfDOM.viewReader.classList.remove('hidden');
+            rfDOM.progressContainer.classList.remove('hidden');
+            rfDOM.interactionHint.classList.remove('hidden');
+            dom.btnHome.classList.add('hidden');
+            dom.btnRfBack.classList.remove('hidden');
+            window.scrollTo(0, 0);
+            rfState.isReadingView = true;
+
+            // Fast-render all already-revealed characters without animation
+            let pIdx = 0, cIdx = 0, rendered = 0;
+            const target = saved.revealedChars;
+
+            while (rendered < target && pIdx < rfState.paragraphs.length) {
+                const paraText = rfState.paragraphs[pIdx];
+                if (cIdx >= paraText.length) {
+                    // Finish this paragraph
+                    if (rfState.currentPNode) rfState.currentPNode = null;
+                    rendered++; pIdx++; cIdx = 0; continue;
+                }
+                if (!rfState.currentPNode) {
+                    rfState.currentPNode = document.createElement('p');
+                    rfDOM.readerContent.appendChild(rfState.currentPNode);
+                }
+                // How many chars remain in this paragraph before we hit the target?
+                const charsLeftInPara = paraText.length - cIdx;
+                const charsLeftTotal = target - rendered;
+                const charsToTake = Math.min(charsLeftInPara, charsLeftTotal);
+                rfState.currentPNode.appendChild(document.createTextNode(paraText.slice(cIdx, cIdx + charsToTake)));
+                cIdx += charsToTake;
+                rendered += charsToTake;
+            }
+
+            // Restore live state to resume point
+            rfState.pIndex = pIdx;
+            rfState.cIndex = cIdx;
+            rfState.revealedChars = rendered;
+
+            rfDOM.progressBar.style.width = `${Math.min(100, (rendered / rfState.totalChars) * 100)}%`;
+            rfState.lastDocHeight = document.body.offsetHeight;
+
+            // Scroll to the bottom of revealed content
+            requestAnimationFrame(() => {
+                const lastP = rfDOM.readerContent.lastElementChild;
+                if (lastP) lastP.scrollIntoView({ block: 'center' });
+            });
         }
 
         function switchToReader() {
             const text = rfDOM.textInput.value.trim();
             if (!text) return;
 
+            discardProgress(); // clear any saved session for previous text
             rfState.paragraphs = text.split(/\n+/);
             rfState.totalChars = text.length;
             rfState.pIndex = 0; rfState.cIndex = 0; rfState.revealedChars = 0; rfState.isCompleted = false; rfState.currentPNode = null;
@@ -683,6 +835,7 @@
             dom.btnHome.classList.remove('hidden');
             
             rfState.isReadingView = false;
+            checkResumeBanner();
         }
 
         function startHold() {
@@ -703,6 +856,7 @@
                 rfState.isHolding = false;
                 cancelAnimationFrame(rfState.animationFrame);
                 if (!rfState.isCompleted && rfState.isReadingView) rfDOM.interactionHint.classList.remove('reading');
+                saveProgress();
             }
         }
 
@@ -771,6 +925,7 @@
         function finishReading() {
             rfState.isCompleted = true; rfDOM.progressBar.style.width = '100%'; stopHold();
             rfDOM.completionBanner.classList.remove('hidden'); rfDOM.interactionHint.classList.add('hidden');
+            discardProgress();
         }
 
         function isValidRfTarget(e) {
