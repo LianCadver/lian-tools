@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lian Tools</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Fira+Code:wght@400;500&display=swap');
+
+        :root {
+            /* Light Theme */
+            --bg: #fcfcfc;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --nav-bg: rgba(252, 252, 252, 0.85);
+            --border: #eaeaea;
+            --accent: #2c2c2c;
+            --accent-hover: #000000;
+            --panel-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
+            --focus-ring: rgba(0, 0, 0, 0.1);
+            --error: #d93025;
+            
+            /* Typography Options */
+            --font-ui: 'Inter', sans-serif;
+            --font-reader: 'Source Serif 4', serif;
+            --reader-size: 20px;
+            
+            /* UI Sizes */
+            --nav-height: 64px;
+        }
+
+        [data-theme="dark"] {
+            --bg: #121212;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --nav-bg: rgba(18, 18, 18, 0.85);
+            --border: #2a2a2a;
+            --accent: #e0e0e0;
+            --accent-hover: #ffffff;
+            --panel-bg: #1e1e1e;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+            --focus-ring: rgba(255, 255, 255, 0.15);
+            --error: #f28b82;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-ui);
+            background-color: var(--bg);
+            color: var(--text-primary);
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Utility */
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        .fade-out { animation: fadeOut 0.4s ease forwards; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+        /* Typography */
+        h1, h2, h3, h4 { font-weight: 500; }
+        button, input, textarea, select { font-family: inherit; color: inherit; }
+        
+        button {
+            cursor: pointer; border: none; background: none;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        button:focus-visible {
+            outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px;
+        }
+
+        /* Top Bar */
+        #navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--nav-height);
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; z-index: 100;
+            transition: background-color 0.4s ease, border-color 0.4s ease;
+        }
+
+        .nav-left, .nav-right { display: flex; align-items: center; gap: 16px; width: 33%; }
+        .nav-right { justify-content: flex-end; }
+        .nav-center { width: 33%; text-align: center; }
+
+        .app-title { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; }
+
+        .icon-btn {
+            width: 40px; height: 40px; border-radius: 50%;
+            color: var(--text-secondary);
+        }
+        .icon-btn:hover { color: var(--accent); background: var(--focus-ring); }
+        .icon-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .back-btn { font-size: 0.95rem; color: var(--text-secondary); gap: 8px; padding: 8px 12px; border-radius: 6px; }
+        .back-btn:hover { color: var(--accent); background: var(--focus-ring); }
+        .back-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .gh-link {
+            font-size: 0.95rem; color: var(--text-secondary); text-decoration: none;
+            padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 6px;
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+        .gh-link:hover { color: var(--accent); background: var(--focus-ring); }
+        .gh-link svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* General Layout */
+        .view-wrapper {
+            margin-top: var(--nav-height);
+            min-height: calc(100vh - var(--nav-height));
+            display: flex; flex-direction: column;
+            padding: 60px 24px; width: 100%;
+        }
+
+        /* ------------------ HUB UI ------------------ */
+        #hub-view { max-width: 800px; margin: 0 auto; text-align: center; }
+        .hub-header { margin-bottom: 40px; }
+        .hub-header h2 { font-size: 2rem; color: var(--text-primary); margin-bottom: 8px; }
+        .hub-header p { color: var(--text-secondary); font-size: 1.1rem; }
+        
+        .hub-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;
+        }
+        .hub-card {
+            background: var(--panel-bg); border: 1px solid var(--border); border-radius: 16px;
+            padding: 40px 24px; cursor: pointer; text-align: left;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: var(--shadow);
+        }
+        .hub-card:hover {
+            transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); border-color: var(--accent);
+        }
+        .hub-card h3 { font-size: 1.5rem; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+        .hub-card svg { width: 24px; height: 24px; stroke: var(--accent); stroke-width: 2; fill: none; }
+        .hub-card p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; }
+
+        /* ------------------ READFLOW UI ------------------ */
+        #progress-container {
+            position: fixed; top: var(--nav-height); left: 0; width: 100%; height: 3px; background: transparent; z-index: 99;
+        }
+        #progress-bar { height: 100%; width: 0%; background: var(--accent); transition: width 0.1s linear; }
+
+        #submit-view { max-width: 720px; margin: 0 auto; width: 100%; animation: fadeIn 0.4s ease; }
+        .submit-header { margin-bottom: 24px; text-align: center; }
+        .submit-header h2 { font-size: 1.5rem; margin-bottom: 8px; color: var(--text-primary); }
+        .submit-header p { color: var(--text-secondary); font-size: 0.95rem; }
+
+        #text-input {
+            width: 100%; height: 50vh; background: transparent; border: 1px solid var(--border);
+            border-radius: 12px; padding: 24px; font-size: 1.1rem; line-height: 1.6; resize: none;
+            color: var(--text-primary); transition: border-color 0.3s ease; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        #text-input:focus { outline: none; border-color: var(--accent); }
+
+        .submit-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+        .char-count { color: var(--text-secondary); font-size: 0.9rem; }
+        
+        .start-btn {
+            background: var(--accent); color: var(--bg); padding: 12px 32px; font-size: 1rem;
+            font-weight: 500; border-radius: 30px; transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .start-btn:hover { transform: translateY(-2px); background: var(--accent-hover); }
+        .start-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        #reader-view { max-width: 720px; margin: 0 auto; width: 100%; padding-top: 40px; padding-bottom: 200px; position: relative; }
+        #reader-content { font-family: var(--font-reader); font-size: var(--reader-size); line-height: 1.8; color: var(--text-primary); text-align: left; }
+        #reader-content p { margin-bottom: 1.5em; white-space: pre-wrap; word-wrap: break-word; }
+        .char-anim { position: relative; animation: revealChar 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
+        @keyframes revealChar { 0% { opacity: 0; top: 6px; } 100% { opacity: 1; top: 0; } }
+
+        #interaction-hint {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); background: var(--panel-bg);
+            border: 1px solid var(--border); padding: 12px 24px; border-radius: 30px; box-shadow: var(--shadow);
+            color: var(--text-secondary); font-size: 0.9rem; pointer-events: none;
+            transition: opacity 0.4s ease, transform 0.4s ease; z-index: 90; display: flex; align-items: center; gap: 8px;
+        }
+        #interaction-hint.reading { opacity: 0; transform: translate(-50%, 20px); }
+        #interaction-hint svg { width: 16px; height: 16px; stroke: currentColor; }
+        #completion-banner { text-align: center; padding: 60px 0; color: var(--text-secondary); font-style: italic; }
+
+        /* ------------------ READFLOW SETTINGS ------------------ */
+        #settings-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 1000;
+            display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        #settings-overlay.active { opacity: 1; pointer-events: auto; }
+        #settings-panel {
+            background: var(--panel-bg); width: 90%; max-width: 400px; border-radius: 16px; padding: 32px;
+            box-shadow: var(--shadow); transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--border);
+        }
+        #settings-overlay.active #settings-panel { transform: translateY(0); }
+        
+        .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .settings-header h3 { font-size: 1.25rem; color: var(--text-primary); }
+        .close-btn { color: var(--text-secondary); }
+        .close-btn:hover { color: var(--accent); }
+        .setting-group { margin-bottom: 24px; }
+        .setting-group label { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px; }
+        .setting-val { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+        select.style-select { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); appearance: none; cursor: pointer; font-size: 0.95rem; }
+        select.style-select:focus { outline: none; border-color: var(--accent); }
+        
+        input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: var(--border); border-radius: 2px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: var(--accent); margin-top: -6px; cursor: pointer; transition: transform 0.1s; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 4px; background: var(--border); border-radius: 2px; }
+        input[type="range"]::-moz-range-thumb { height: 16px; width: 16px; border-radius: 50%; background: var(--accent); border: none; cursor: pointer; transition: transform 0.1s; }
+        .reset-btn { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px; }
+        .reset-btn:hover { background: var(--focus-ring); color: var(--text-primary); }
+
+        /* ------------------ STREAMCORD UI ------------------ */
+        .sc-container { max-width: 720px; margin: 0 auto; width: 100%; }
+        .header { text-align: center; margin-bottom: 32px; }
+        .header h2 { font-size: 1.5rem; margin-bottom: 8px; color: var(--text-primary); }
+        .header p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; }
+
+        .field { margin-bottom: 24px; position: relative; }
+        .field input[type="text"] {
+            width: 100%; background: transparent; border: 1px solid var(--border); border-radius: 12px;
+            padding: 16px 20px; font-size: 1.05rem; color: var(--text-primary);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .field input[type="text"]::placeholder { color: var(--text-secondary); opacity: 0.6; }
+        .field input[type="text"]:focus { outline: none; border-color: var(--accent); }
+        .field input[type="text"].invalid { border-color: var(--error); }
+        
+        .error-msg { color: var(--error); font-size: 0.85rem; margin-top: 8px; min-height: 18px; padding-left: 4px; }
+        
+        .hint { font-size: 0.9rem; line-height: 1.6; margin-top: 16px; color: var(--text-secondary); text-align: center; }
+        .hint code { font-family: 'Fira Code', monospace; background: var(--focus-ring); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; margin: 0 2px; color: var(--text-primary); }
+
+        .output-wrap { margin-top: 16px; display: flex; flex-direction: column; gap: 16px; }
+        .copy-box { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .copy-box:hover { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08); transform: translateY(-2px); }
+        .copy-box > label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+        
+        .out-btn {
+            width: 100%; font-family: var(--font-ui); font-size: 0.95rem; padding: 12px 16px;
+            background: var(--bg); color: var(--text-primary); border: 1px solid var(--border);
+            border-radius: 8px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            text-align: left; transition: all 0.2s ease;
+        }
+        .out-btn:hover { background: var(--focus-ring); border-color: var(--text-secondary); }
+        .copied { font-size: 0.85rem; margin-top: 8px; color: var(--text-secondary); opacity: 0; transition: opacity 0.25s ease; text-align: right; font-weight: 500; }
+        .copied.show { opacity: 1; }
+
+        .pixiv-extras { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); }
+        .pixiv-extras > label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+        .pixiv-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+        .pixiv-row span { font-size: 0.9rem; color: var(--text-secondary); min-width: 110px; }
+        .pixiv-row .dash { min-width: auto; color: var(--text-secondary); }
+        .pixiv-row input[type="number"] {
+            width: 80px; font-family: var(--font-ui); font-size: 0.95rem; padding: 10px 12px; background: var(--bg);
+            color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; outline: none;
+            transition: border-color 0.2s ease; -moz-appearance: textfield;
+        }
+        .pixiv-row input[type="number"]::-webkit-inner-spin-button, .pixiv-row input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+        .pixiv-row input[type="number"]:focus { border-color: var(--accent); }
+        .pixiv-gen-btn { background: var(--accent); color: var(--bg); padding: 10px 20px; font-size: 0.9rem; font-weight: 500; border-radius: 8px; transition: background 0.2s ease, transform 0.2s ease; }
+        .pixiv-gen-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+        @media (max-width: 600px) {
+            .nav-left .back-text { display: none; }
+            .nav-left .gh-text { display: none; }
+            .nav-center { width: auto; flex-grow: 1; }
+            .view-wrapper { padding: 40px 16px; }
+            #text-input { height: 60vh; }
+            #settings-panel { padding: 24px; }
+            .pixiv-row span { min-width: 100%; margin-bottom: -4px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="navbar">
+        <div class="nav-left">
+            <button id="btn-home" class="back-btn hidden" aria-label="Go to Hub">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span class="back-text">Home</span>
+            </button>
+            <button id="btn-rf-back" class="back-btn hidden" aria-label="Go back">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                <span class="back-text">Back</span>
+            </button>
+            <a href="https://github.com/LianCadver/lian-tools" target="_blank" rel="noopener noreferrer" class="gh-link" id="gh-link" aria-label="GitHub Repository">
+                <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                <span class="gh-text">GitHub</span>
+            </a>
+        </div>
+        <div class="nav-center">
+            <h1 class="app-title" id="main-title">Lian Tools</h1>
+        </div>
+        <div class="nav-right">
+            <button id="btn-theme" class="icon-btn" aria-label="Toggle theme">
+                <svg id="icon-sun" class="hidden" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <svg id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            <button id="btn-settings" class="icon-btn hidden" aria-label="Settings">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <main id="hub-wrapper" class="view-wrapper hidden fade-in">
+        <div id="hub-view">
+            <div class="hub-header">
+                <h2>Hi</h2>
+                <p>Check out these cool stuff I made</p>
+            </div>
+            <div class="hub-grid">
+                <div class="hub-card" onclick="navigate('readflow')">
+                    <h3><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Readflow</h3>
+                    <p>Read freely without distractions. Paste your text and reveal it at your own pace.</p>
+                </div>
+                <div class="hub-card" onclick="navigate('streamcord')">
+                    <h3><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Streamcord</h3>
+                    <p>Instantly generate fixed, embed-friendly URLs for Twitter, Pixiv, TikTok, and more.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="progress-container" class="hidden">
+        <div id="progress-bar"></div>
+    </div>
+    <main id="readflow-wrapper" class="view-wrapper hidden">
+        <div id="submit-view">
+            <div class="submit-header">
+                <h2>Paste your text</h2>
+                <p>Read freely without distractions. Reveal at your own pace.</p>
+            </div>
+            <textarea id="text-input" placeholder="Paste an article, essay, or chapter here..." aria-label="Text to read"></textarea>
+            <div class="submit-footer">
+                <span class="char-count" id="char-count">0 characters</span>
+                <button id="btn-start" class="start-btn" disabled>Start Reading</button>
+            </div>
+        </div>
+
+        <div id="reader-view" class="hidden">
+            <div id="reader-content" aria-live="polite"></div>
+            <div id="completion-banner" class="hidden">End of text</div>
+        </div>
+
+        <div id="interaction-hint" class="hidden">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="hint-text">Hold Space, Left-Click, or Touch to read</span>
+        </div>
+    </main>
+
+    <div id="settings-overlay">
+        <aside id="settings-panel" role="dialog" aria-labelledby="settings-title">
+            <div class="settings-header">
+                <h3 id="settings-title">Reading Preferences</h3>
+                <button id="btn-close-settings" class="icon-btn close-btn" aria-label="Close settings">
+                    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="setting-group">
+                <label for="font-select">Typeface</label>
+                <select id="font-select" class="style-select">
+                    <option value="'Source Serif 4', serif">Source Serif 4</option>
+                    <option value="'Lora', serif">Lora</option>
+                    <option value="'Merriweather', serif">Merriweather</option>
+                    <option value="'Inter', sans-serif">Inter</option>
+                    <option value="'Atkinson Hyperlegible', sans-serif">Atkinson Hyperlegible</option>
+                    <option value="'Fira Code', monospace">Fira Code (Monospace)</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label for="size-slider"><span>Font Size</span> <span id="size-val" class="setting-val">20px</span></label>
+                <input type="range" id="size-slider" min="14" max="36" step="1" value="20">
+            </div>
+            <div class="setting-group">
+                <label for="speed-slider"><span>Reveal Speed</span> <span id="speed-val" class="setting-val">40 cps</span></label>
+                <input type="range" id="speed-slider" min="10" max="150" step="5" value="40">
+            </div>
+            <div class="setting-group">
+                <label for="delay-slider"><span>Hold Delay</span> <span id="delay-val" class="setting-val">200ms</span></label>
+                <input type="range" id="delay-slider" min="0" max="800" step="50" value="200">
+            </div>
+            <button id="btn-reset-settings" class="reset-btn">Reset to Defaults</button>
+        </aside>
+    </div>
+
+    <main id="streamcord-wrapper" class="view-wrapper hidden">
+        <div class="sc-container fade-in">
+            <div class="header">
+                <h2>Discord Embed Converter</h2>
+                <p>Paste a supported link below to instantly generate a fixed, embed-friendly URL.</p>
+            </div>
+            <div class="field" style="animation-delay: 0.1s;">
+                <input id="sc-inp" type="text" placeholder="https://..." autocomplete="off" spellcheck="false" aria-label="URL Input" />
+                <div id="sc-err" class="error-msg"></div>
+                <p class="hint">
+                    Supported Platforms:<br>
+                    <code>Bilibili</code> <code>Bluesky</code> <code>Facebook</code>
+                    <code>Instagram</code> <code>Newgrounds</code> <code>Pixiv</code>
+                    <code>Reddit</code> <code>Streamable</code> <code>TikTok</code>
+                    <code>Twitch Clips</code> <code>X/Twitter</code>
+                </p>
+            </div>
+            <div class="output-wrap" id="sc-out-wrap"></div>
+        </div>
+    </main>
+
+    <script>
+        /** --- Global Core & Navigation --- **/
+        const dom = {
+            body: document.body,
+            iconSun: document.getElementById('icon-sun'),
+            iconMoon: document.getElementById('icon-moon'),
+            btnTheme: document.getElementById('btn-theme'),
+            btnHome: document.getElementById('btn-home'),
+            btnRfBack: document.getElementById('btn-rf-back'),
+            btnSettings: document.getElementById('btn-settings'),
+            ghLink: document.getElementById('gh-link'),
+            mainTitle: document.getElementById('main-title'),
+            
+            // Views
+            hubWrapper: document.getElementById('hub-wrapper'),
+            rfWrapper: document.getElementById('readflow-wrapper'),
+            scWrapper: document.getElementById('streamcord-wrapper')
+        };
+
+        let currentFeature = localStorage.getItem('liantools_last_feature') || 'hub';
+
+        // Theme
+        let currentTheme = localStorage.getItem('liantools_theme') || 'light';
+        function applyTheme() {
+            if (currentTheme === 'dark') {
+                dom.body.setAttribute('data-theme', 'dark');
+                dom.iconSun.classList.remove('hidden');
+                dom.iconMoon.classList.add('hidden');
+            } else {
+                dom.body.removeAttribute('data-theme');
+                dom.iconSun.classList.add('hidden');
+                dom.iconMoon.classList.remove('hidden');
+            }
+        }
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('liantools_theme', currentTheme);
+            applyTheme();
+        }
+        dom.btnTheme.addEventListener('click', toggleTheme);
+        applyTheme();
+
+        // Router
+        function navigate(feature) {
+            currentFeature = feature;
+            localStorage.setItem('liantools_last_feature', feature);
+
+            // Hide all views
+            dom.hubWrapper.classList.add('hidden');
+            dom.rfWrapper.classList.add('hidden');
+            dom.scWrapper.classList.add('hidden');
+            
+            // Reset nav buttons
+            dom.btnHome.classList.add('hidden');
+            dom.btnRfBack.classList.add('hidden');
+            dom.ghLink.classList.add('hidden');
+            dom.btnSettings.classList.add('hidden');
+
+            if (feature === 'readflow') {
+                dom.rfWrapper.classList.remove('hidden');
+                dom.mainTitle.textContent = 'Readflow';
+                dom.btnSettings.classList.remove('hidden');
+                if (rfState.isReadingView) {
+                    dom.btnRfBack.classList.remove('hidden');
+                } else {
+                    dom.btnHome.classList.remove('hidden');
+                }
+            } else if (feature === 'streamcord') {
+                dom.scWrapper.classList.remove('hidden');
+                dom.mainTitle.textContent = 'Streamcord';
+                dom.btnHome.classList.remove('hidden');
+            } else { // hub
+                dom.hubWrapper.classList.remove('hidden');
+                dom.mainTitle.textContent = 'Lian Tools';
+                dom.ghLink.classList.remove('hidden');
+            }
+            window.scrollTo(0, 0);
+        }
+
+        dom.btnHome.addEventListener('click', () => navigate('hub'));
+
+        /** --- Readflow Feature --- **/
+        const rfDOM = {
+            viewSubmit: document.getElementById('submit-view'),
+            viewReader: document.getElementById('reader-view'),
+            textInput: document.getElementById('text-input'),
+            btnStart: document.getElementById('btn-start'),
+            charCount: document.getElementById('char-count'),
+            readerContent: document.getElementById('reader-content'),
+            progressContainer: document.getElementById('progress-container'),
+            progressBar: document.getElementById('progress-bar'),
+            completionBanner: document.getElementById('completion-banner'),
+            interactionHint: document.getElementById('interaction-hint'),
+            hintText: document.getElementById('hint-text'),
+            
+            settingsOverlay: document.getElementById('settings-overlay'),
+            btnCloseSettings: document.getElementById('btn-close-settings'),
+            btnResetSettings: document.getElementById('btn-reset-settings'),
+            fontSelect: document.getElementById('font-select'),
+            sizeSlider: document.getElementById('size-slider'),
+            speedSlider: document.getElementById('speed-slider'),
+            delaySlider: document.getElementById('delay-slider'),
+            sizeVal: document.getElementById('size-val'),
+            speedVal: document.getElementById('speed-val'),
+            delayVal: document.getElementById('delay-val')
+        };
+
+        const DEFAULT_SETTINGS = { font: "'Source Serif 4', serif", fontSize: 20, speed: 40, delay: 200 };
+        let rfSettings = { ...DEFAULT_SETTINGS };
+        const rfState = {
+            paragraphs: [], pIndex: 0, cIndex: 0, totalChars: 0, revealedChars: 0,
+            isReadingView: false, isHolding: false, isCompleted: false,
+            holdTimer: null, animationFrame: null, lastTime: 0, charAccumulator: 0,
+            currentPNode: null, lastDocHeight: 0, touchStartY: 0
+        };
+
+        function initReadflow() {
+            const saved = localStorage.getItem('readflow_prefs');
+            if (saved) { try { rfSettings = { ...DEFAULT_SETTINGS, ...JSON.parse(saved) }; } catch (e) {} }
+            
+            applyRfSettingsToUI();
+            updateRfSettingsVars();
+            checkRfInputContent();
+            
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                rfDOM.hintText.textContent = "Press and hold to read";
+            }
+
+            rfDOM.textInput.addEventListener('input', checkRfInputContent);
+            rfDOM.btnStart.addEventListener('click', switchToReader);
+            dom.btnRfBack.addEventListener('click', switchToSubmit);
+            
+            dom.btnSettings.addEventListener('click', () => rfDOM.settingsOverlay.classList.add('active'));
+            rfDOM.btnCloseSettings.addEventListener('click', () => rfDOM.settingsOverlay.classList.remove('active'));
+            rfDOM.settingsOverlay.addEventListener('click', (e) => { if(e.target === rfDOM.settingsOverlay) rfDOM.settingsOverlay.classList.remove('active'); });
+            rfDOM.btnResetSettings.addEventListener('click', () => { rfSettings = { ...DEFAULT_SETTINGS }; applyRfSettingsToUI(); updateRfSettingsVars(); });
+            
+            rfDOM.fontSelect.addEventListener('change', updateRfSettingsVars);
+            rfDOM.sizeSlider.addEventListener('input', updateRfSettingsVars);
+            rfDOM.speedSlider.addEventListener('input', updateRfSettingsVars);
+            rfDOM.delaySlider.addEventListener('input', updateRfSettingsVars);
+
+            document.addEventListener('mousedown', (e) => { if (isValidRfTarget(e) && e.button === 0) startHold(); });
+            document.addEventListener('mouseup', stopHold);
+            document.addEventListener('mouseleave', stopHold);
+            document.addEventListener('touchstart', (e) => { if (!isValidRfTarget(e)) return; rfState.touchStartY = e.touches[0].clientY; startHold(); }, { passive: true });
+            document.addEventListener('touchmove', (e) => { if (Math.abs(e.touches[0].clientY - rfState.touchStartY) > 10) stopHold(); }, { passive: true });
+            document.addEventListener('touchend', stopHold);
+            document.addEventListener('touchcancel', stopHold);
+            document.addEventListener('keydown', (e) => { if (e.code === 'Space' && isValidRfTarget(e)) { e.preventDefault(); if (!e.repeat) startHold(); } });
+            document.addEventListener('keyup', (e) => { if (e.code === 'Space') stopHold(); });
+        }
+
+        function applyRfSettingsToUI() {
+            rfDOM.fontSelect.value = rfSettings.font;
+            rfDOM.sizeSlider.value = rfSettings.fontSize;
+            rfDOM.speedSlider.value = rfSettings.speed;
+            rfDOM.delaySlider.value = rfSettings.delay;
+        }
+
+        function updateRfSettingsVars() {
+            rfSettings.font = rfDOM.fontSelect.value;
+            rfSettings.fontSize = parseInt(rfDOM.sizeSlider.value, 10);
+            rfSettings.speed = parseInt(rfDOM.speedSlider.value, 10);
+            rfSettings.delay = parseInt(rfDOM.delaySlider.value, 10);
+
+            rfDOM.sizeVal.textContent = `${rfSettings.fontSize}px`;
+            rfDOM.speedVal.textContent = `${rfSettings.speed} cps`;
+            rfDOM.delayVal.textContent = `${rfSettings.delay}ms`;
+            
+            document.documentElement.style.setProperty('--font-reader', rfSettings.font);
+            document.documentElement.style.setProperty('--reader-size', `${rfSettings.fontSize}px`);
+            
+            localStorage.setItem('readflow_prefs', JSON.stringify(rfSettings));
+            rfState.lastDocHeight = document.body.offsetHeight;
+        }
+
+        function checkRfInputContent() {
+            const len = rfDOM.textInput.value.trim().length;
+            rfDOM.charCount.textContent = `${len.toLocaleString()} characters`;
+            rfDOM.btnStart.disabled = len === 0;
+        }
+
+        function switchToReader() {
+            const text = rfDOM.textInput.value.trim();
+            if (!text) return;
+
+            rfState.paragraphs = text.split(/\n+/);
+            rfState.totalChars = text.length;
+            rfState.pIndex = 0; rfState.cIndex = 0; rfState.revealedChars = 0; rfState.isCompleted = false; rfState.currentPNode = null;
+            rfState.lastDocHeight = document.body.offsetHeight;
+            
+            rfDOM.readerContent.innerHTML = '';
+            rfDOM.progressBar.style.width = '0%';
+            rfDOM.completionBanner.classList.add('hidden');
+            
+            rfDOM.viewSubmit.classList.add('hidden');
+            rfDOM.viewReader.classList.remove('hidden');
+            rfDOM.progressContainer.classList.remove('hidden');
+            rfDOM.interactionHint.classList.remove('hidden');
+            
+            dom.btnHome.classList.add('hidden');
+            dom.btnRfBack.classList.remove('hidden');
+            
+            window.scrollTo(0, 0);
+            rfState.isReadingView = true;
+        }
+
+        function switchToSubmit() {
+            stopHold();
+            rfDOM.viewReader.classList.add('hidden');
+            rfDOM.progressContainer.classList.add('hidden');
+            rfDOM.interactionHint.classList.add('hidden');
+            rfDOM.viewSubmit.classList.remove('hidden');
+            
+            dom.btnRfBack.classList.add('hidden');
+            dom.btnHome.classList.remove('hidden');
+            
+            rfState.isReadingView = false;
+        }
+
+        function startHold() {
+            if (!rfState.isReadingView || rfState.isCompleted || currentFeature !== 'readflow') return;
+            if (!rfState.isHolding) {
+                clearTimeout(rfState.holdTimer);
+                rfState.holdTimer = setTimeout(() => {
+                    rfState.isHolding = true; rfState.lastTime = performance.now(); rfState.lastDocHeight = document.body.offsetHeight;
+                    rfDOM.interactionHint.classList.add('reading');
+                    rfState.animationFrame = requestAnimationFrame(readLoop);
+                }, rfSettings.delay);
+            }
+        }
+
+        function stopHold() {
+            clearTimeout(rfState.holdTimer);
+            if (rfState.isHolding) {
+                rfState.isHolding = false;
+                cancelAnimationFrame(rfState.animationFrame);
+                if (!rfState.isCompleted && rfState.isReadingView) rfDOM.interactionHint.classList.remove('reading');
+            }
+        }
+
+        function readLoop(timestamp) {
+            if (!rfState.isHolding) return;
+            const delta = timestamp - rfState.lastTime; rfState.lastTime = timestamp;
+            rfState.charAccumulator += (delta / 1000) * rfSettings.speed;
+            const charsToRender = Math.floor(rfState.charAccumulator);
+
+            if (charsToRender > 0) {
+                rfState.charAccumulator -= charsToRender;
+                renderNextChars(charsToRender);
+            }
+            if (rfState.isHolding) rfState.animationFrame = requestAnimationFrame(readLoop);
+        }
+
+        function renderNextChars(count) {
+            if (rfState.isCompleted) return;
+            let appendedCount = 0;
+
+            while (count > 0) {
+                if (rfState.pIndex >= rfState.paragraphs.length) { finishReading(); break; }
+                if (!rfState.currentPNode) { rfState.currentPNode = document.createElement('p'); rfDOM.readerContent.appendChild(rfState.currentPNode); }
+                const currentParaText = rfState.paragraphs[rfState.pIndex];
+
+                if (rfState.cIndex >= currentParaText.length) {
+                    rfState.pIndex++; rfState.cIndex = 0; flattenDOM(rfState.currentPNode); rfState.currentPNode = null;
+                    rfState.revealedChars++; count--; continue;
+                }
+
+                const span = document.createElement('span');
+                span.textContent = currentParaText[rfState.cIndex];
+                span.className = 'char-anim';
+                span.style.animationDelay = `${(appendedCount * 5)}ms`;
+                rfState.currentPNode.appendChild(span);
+                
+                rfState.cIndex++; rfState.revealedChars++; appendedCount++; count--;
+            }
+            rfDOM.progressBar.style.width = `${Math.min(100, (rfState.revealedChars / rfState.totalChars) * 100)}%`;
+            maintainScroll();
+        }
+
+        function flattenDOM(pNode) {
+            if (!pNode) return;
+            const spans = Array.from(pNode.childNodes).filter(c => c.nodeType === 1 && c.tagName === 'SPAN');
+            if (spans.length > 100) {
+                let combinedText = "";
+                spans.slice(0, spans.length - 20).forEach(n => { combinedText += n.textContent; n.remove(); });
+                if (pNode.firstChild && pNode.firstChild.nodeType === 3) pNode.firstChild.nodeValue += combinedText;
+                else pNode.insertBefore(document.createTextNode(combinedText), pNode.firstChild);
+            }
+        }
+
+        function maintainScroll() {
+            const newDocHeight = document.body.offsetHeight;
+            const heightDiff = newDocHeight - rfState.lastDocHeight;
+            if (heightDiff > 0) {
+                if (newDocHeight - (window.innerHeight + window.scrollY) < 300) window.scrollBy(0, heightDiff);
+                rfState.lastDocHeight = newDocHeight;
+            }
+        }
+
+        function finishReading() {
+            rfState.isCompleted = true; rfDOM.progressBar.style.width = '100%'; stopHold();
+            rfDOM.completionBanner.classList.remove('hidden'); rfDOM.interactionHint.classList.add('hidden');
+        }
+
+        function isValidRfTarget(e) {
+            if (!rfState.isReadingView || currentFeature !== 'readflow') return false;
+            if (e.target.closest('#navbar') || e.target.closest('#settings-overlay')) return false;
+            if (['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return false;
+            return true;
+        }
+
+        /** --- Streamcord Feature --- **/
+        const scDOM = {
+            inp: document.getElementById('sc-inp'),
+            err: document.getElementById('sc-err'),
+            outWrap: document.getElementById('sc-out-wrap')
+        };
+
+        function withScheme(v) {
+            v = v.trim(); if (!v) return ''; return /^https?:\/\//i.test(v) ? v : 'https://' + v;
+        }
+        function cleanUrl(url) { return url.split('?')[0].split('#')[0]; }
+
+        function convertSC(raw) {
+            if (!raw) return null;
+            const url = withScheme(raw);
+            if (!url) return null;
+            
+            const checks = [
+                { regex: /bilibili\.com/i, fn: u => [{ label: 'vxBilibili', url: `https://www.vxbilibili.com/${cleanUrl(u).match(/bilibili\.com\/(.+)$/i)?.[1]}` }] },
+                { regex: /bsky\.app/i, fn: u => { const m = cleanUrl(u).match(/bsky\.app\/(.+)$/i); return m ? [{ label: 'Normal Embed', url: `https://bskx.app/${m[1]}` }, { label: 'Direct Embed', url: `https://r.bskx.app/${m[1]}` }] : null; } },
+                { regex: /facebook\.com/i, fn: u => [{ label: 'Facebed', url: `https://facebed.com/${cleanUrl(u).match(/facebook\.com\/(.+)$/i)?.[1]}` }] },
+                { regex: /instagram\.com/i, fn: u => [{ label: 'KKInstagram', url: `https://www.kkinstagram.com/${cleanUrl(u).match(/instagram\.com\/(.+)$/i)?.[1]}` }] },
+                { regex: /newgrounds\.com/i, fn: u => [{ label: 'FixNewgrounds', url: `https://www.fixnewgrounds.com/${cleanUrl(u).match(/newgrounds\.com\/(.+)$/i)?.[1]}` }] },
+                { regex: /pixiv\.net/i, fn: u => {
+                    const m = cleanUrl(u).match(/pixiv\.net\/(?:en\/)?artworks\/(\d+)(?:\/(\d+))?$/i);
+                    if (!m) return null;
+                    const id = m[1], page = m[2] || null;
+                    const r = [
+                        { label: 'By illust_id', url: `https://www.phixiv.net/member_illust.php?illust_id=${id}` },
+                        { label: 'Artwork', url: `https://www.phixiv.net/artworks/${id}` },
+                        { label: 'Artwork (EN tags)', url: `https://www.phixiv.net/en/artworks/${id}` }
+                    ];
+                    if (page) r.push({ label: `Page ${page}`, url: `https://www.phixiv.net/artworks/${id}/${page}` });
+                    r.push({ label: '__pixiv_range__', id, url: '' });
+                    return r;
+                }},
+                { regex: /reddit\.com/i, fn: u => [{ label: 'Rxddit', url: `https://rxddit.com/${cleanUrl(u).match(/reddit\.com\/(.+)$/i)?.[1]}` }] },
+                { regex: /streamable\.com/i, fn: u => [{ label: 'Direct MP4', url: `https://api-f.streamable.com/api/v1/videos/${cleanUrl(u).match(/streamable\.com\/([A-Za-z0-9]+)$/i)?.[1]}/mp4` }] },
+                { regex: /tiktok\.com/i, fn: u => [{ label: 'Tnktok', url: `https://d.tnktok.com/${cleanUrl(u).match(/tiktok\.com\/(.+)$/i)?.[1]}` }] },
+                { regex: /twitch\.tv/i, fn: u => [{ label: 'fxTwitch', url: `https://fxtwitch.seria.moe/clip/${cleanUrl(u).match(/twitch\.tv\/[^/]+\/clip\/([^/]+)$/i)?.[1]}` }] },
+                { regex: /(?:x\.com|twitter\.com)/i, fn: u => { const m = cleanUrl(u).match(/(?:x\.com|twitter\.com)\/(.+)$/i); return m ? [{ label: 'Normal Embed', url: `https://fixupx.com/${m[1]}` }, { label: 'Direct Embed', url: `https://d.fixupx.com/${m[1]}` }] : null; } }
+            ];
+
+            for (let c of checks) {
+                if (c.regex.test(url)) {
+                    try { const res = c.fn(url); if (res && !res.some(x => x.url.includes('undefined'))) return res; } catch(e){}
+                }
+            }
+            return null;
+        }
+
+        function createCopyBox(label, url) {
+            const box = document.createElement('div'); box.className = 'copy-box fade-in';
+            const lbl = document.createElement('label'); lbl.textContent = label;
+            const btn = document.createElement('button'); btn.className = 'out-btn'; btn.textContent = url; btn.title = url;
+            const copied = document.createElement('p'); copied.className = 'copied'; copied.textContent = 'Copied to clipboard!';
+
+            let t;
+            btn.addEventListener('click', () => {
+                navigator.clipboard.writeText(url).then(() => {
+                    copied.classList.add('show'); clearTimeout(t); t = setTimeout(() => copied.classList.remove('show'), 1800);
+                });
+            });
+            box.append(lbl, btn, copied);
+            return box;
+        }
+
+        function createPixivRangeBox(id) {
+            const wrap = document.createElement('div'); wrap.className = 'pixiv-extras fade-in'; wrap.style.animationDelay = '0.1s';
+            const lbl = document.createElement('label'); lbl.textContent = 'Phixiv — Image Range'; wrap.appendChild(lbl);
+
+            const sRow = document.createElement('div'); sRow.className = 'pixiv-row';
+            const sSp = document.createElement('span'); sSp.textContent = 'Single page:';
+            const sIn = document.createElement('input'); sIn.type = 'number'; sIn.min = '1'; sIn.placeholder = 'e.g. 2';
+            const sBtn = document.createElement('button'); sBtn.className = 'pixiv-gen-btn'; sBtn.textContent = 'Generate';
+            sRow.append(sSp, sIn, sBtn);
+            const sOut = document.createElement('div');
+
+            const rRow = document.createElement('div'); rRow.className = 'pixiv-row';
+            const rSp = document.createElement('span'); rSp.textContent = 'Range:';
+            const rFrom = document.createElement('input'); rFrom.type = 'number'; rFrom.min = '1'; rFrom.placeholder = 'from';
+            const rDash = document.createElement('span'); rDash.className = 'dash'; rDash.textContent = '–';
+            const rTo = document.createElement('input'); rTo.type = 'number'; rTo.min = '1'; rTo.placeholder = 'to';
+            const rBtn = document.createElement('button'); rBtn.className = 'pixiv-gen-btn'; rBtn.textContent = 'Generate';
+            rRow.append(rSp, rFrom, rDash, rTo, rBtn);
+            const rOut = document.createElement('div');
+
+            wrap.append(sRow, sOut, rRow, rOut);
+
+            sBtn.addEventListener('click', () => { const n = parseInt(sIn.value, 10); if (!n || n < 1) return; sOut.innerHTML = ''; sOut.appendChild(createCopyBox(`Page ${n}`, `https://www.phixiv.net/artworks/${id}/${n}`)); });
+            rBtn.addEventListener('click', () => { const f = parseInt(rFrom.value, 10), t = parseInt(rTo.value, 10); if (!f || !t || f < 1 || t < f) return; rOut.innerHTML = ''; rOut.appendChild(createCopyBox(`Pages ${f}–${t}`, `https://www.phixiv.net/artworks/${id}/${f}-${t}`)); });
+
+            return wrap;
+        }
+
+        function initStreamcord() {
+            scDOM.inp.addEventListener('input', () => {
+                const val = scDOM.inp.value.trim();
+                scDOM.outWrap.innerHTML = '';
+
+                if (!val) { scDOM.err.textContent = ''; scDOM.inp.classList.remove('invalid'); return; }
+
+                const results = convertSC(val);
+                if (results) {
+                    scDOM.err.textContent = ''; scDOM.inp.classList.remove('invalid');
+                    let pixivId = null, delayCounter = 0;
+                    results.forEach(item => {
+                        if (item.label === '__pixiv_range__') { pixivId = item.id; return; }
+                        const box = createCopyBox(item.label, item.url);
+                        box.style.animationDelay = `${delayCounter * 0.05}s`;
+                        scDOM.outWrap.appendChild(box);
+                        delayCounter++;
+                    });
+                    if (pixivId) scDOM.outWrap.appendChild(createPixivRangeBox(pixivId));
+                } else {
+                    scDOM.err.textContent = 'Unsupported or invalid link.'; scDOM.inp.classList.add('invalid');
+                }
+            });
+        }
+
+        // Boot
+        initReadflow();
+        initStreamcord();
+        navigate(currentFeature); // Load user's last visited view
+    </script>
+</body>
+</html>
