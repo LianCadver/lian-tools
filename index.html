@@ -174,7 +174,7 @@
         .start-btn:hover { transform: translateY(-2px); background: var(--accent-hover); }
         .start-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        #reader-view { max-width: 720px; margin: 0 auto; width: 100%; padding-top: 40px; padding-bottom: 200px; position: relative; }
+        #reader-view { max-width: 720px; margin: 0 auto; width: 100%; padding-top: 40px; padding-bottom: 200px; position: relative; -webkit-user-select: none; user-select: none; }
         #reader-content { font-family: var(--font-reader); font-size: var(--reader-size); line-height: 1.8; color: var(--text-primary); text-align: left; }
         #reader-content p { margin-bottom: 1.5em; white-space: pre-wrap; word-wrap: break-word; }
         .char-anim { position: relative; animation: revealChar 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
