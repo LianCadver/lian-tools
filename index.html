@@ -55,6 +55,14 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            
+            /* Prevent mobile long-press selection popups */
+            -webkit-touch-callout: none;
+        }
+
+        /* Re-enable native touch behavior for input elements so they work normally */
+        input, textarea, select {
+            -webkit-touch-callout: default;
         }
 
         /* Utility */
@@ -89,6 +97,7 @@
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 24px; z-index: 100;
             transition: background-color 0.4s ease, border-color 0.4s ease;
+            -webkit-user-select: none; user-select: none;
         }
 
         .nav-left, .nav-right { display: flex; align-items: center; gap: 16px; width: 33%; }
@@ -125,7 +134,10 @@
         }
 
         /* ------------------ HUB UI ------------------ */
-        #hub-view { max-width: 800px; margin: 0 auto; text-align: center; }
+        #hub-view { 
+            max-width: 800px; margin: 0 auto; text-align: center; 
+            -webkit-user-select: none; user-select: none;
+        }
         .hub-header { margin-bottom: 40px; }
         .hub-header h2 { font-size: 2rem; color: var(--text-primary); margin-bottom: 8px; }
         .hub-header p { color: var(--text-secondary); font-size: 1.1rem; }
@@ -153,7 +165,10 @@
         #progress-bar { height: 100%; width: 0%; background: var(--accent); transition: width 0.1s linear; }
 
         #submit-view { max-width: 720px; margin: 0 auto; width: 100%; animation: fadeIn 0.4s ease; }
-        .submit-header { margin-bottom: 24px; text-align: center; }
+        .submit-header { 
+            margin-bottom: 24px; text-align: center; 
+            -webkit-user-select: none; user-select: none;
+        }
         .submit-header h2 { font-size: 1.5rem; margin-bottom: 8px; color: var(--text-primary); }
         .submit-header p { color: var(--text-secondary); font-size: 0.95rem; }
 
@@ -164,7 +179,10 @@
         }
         #text-input:focus { outline: none; border-color: var(--accent); }
 
-        .submit-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+        .submit-footer { 
+            display: flex; justify-content: space-between; align-items: center; margin-top: 16px; 
+            -webkit-user-select: none; user-select: none;
+        }
         .char-count { color: var(--text-secondary); font-size: 0.9rem; }
         
         .start-btn {
@@ -174,7 +192,10 @@
         .start-btn:hover { transform: translateY(-2px); background: var(--accent-hover); }
         .start-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        #reader-view { max-width: 720px; margin: 0 auto; width: 100%; padding-top: 40px; padding-bottom: 200px; position: relative; -webkit-user-select: none; user-select: none; }
+        #reader-view { 
+            max-width: 720px; margin: 0 auto; width: 100%; padding-top: 40px; padding-bottom: 200px; position: relative; 
+            -webkit-user-select: none; user-select: none; 
+        }
         #reader-content { font-family: var(--font-reader); font-size: var(--reader-size); line-height: 1.8; color: var(--text-primary); text-align: left; }
         #reader-content p { margin-bottom: 1.5em; white-space: pre-wrap; word-wrap: break-word; }
         .char-anim { position: relative; animation: revealChar 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
@@ -189,18 +210,24 @@
         }
         #interaction-hint.reading { opacity: 0; transform: translate(-50%, 20px); }
         #interaction-hint svg { width: 16px; height: 16px; stroke: currentColor; }
-        #completion-banner { text-align: center; padding: 60px 0; color: var(--text-secondary); font-style: italic; }
+        
+        #completion-banner { 
+            text-align: center; padding: 60px 0; color: var(--text-secondary); font-style: italic; 
+            -webkit-user-select: none; user-select: none;
+        }
 
         /* ------------------ READFLOW SETTINGS ------------------ */
         #settings-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 1000;
             display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+            -webkit-user-select: none; user-select: none;
         }
         #settings-overlay.active { opacity: 1; pointer-events: auto; }
         #settings-panel {
             background: var(--panel-bg); width: 90%; max-width: 400px; border-radius: 16px; padding: 32px;
             box-shadow: var(--shadow); transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--border);
+            -webkit-user-select: none; user-select: none;
         }
         #settings-overlay.active #settings-panel { transform: translateY(0); }
         
@@ -225,7 +252,10 @@
 
         /* ------------------ STREAMCORD UI ------------------ */
         .sc-container { max-width: 720px; margin: 0 auto; width: 100%; }
-        .header { text-align: center; margin-bottom: 32px; }
+        .header { 
+            text-align: center; margin-bottom: 32px; 
+            -webkit-user-select: none; user-select: none;
+        }
         .header h2 { font-size: 1.5rem; margin-bottom: 8px; color: var(--text-primary); }
         .header p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; }
 
@@ -241,13 +271,13 @@
         
         .error-msg { color: var(--error); font-size: 0.85rem; margin-top: 8px; min-height: 18px; padding-left: 4px; }
         
-        .hint { font-size: 0.9rem; line-height: 1.6; margin-top: 16px; color: var(--text-secondary); text-align: center; }
+        .hint { font-size: 0.9rem; line-height: 1.6; margin-top: 16px; color: var(--text-secondary); text-align: center; -webkit-user-select: none; user-select: none; }
         .hint code { font-family: 'Fira Code', monospace; background: var(--focus-ring); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; margin: 0 2px; color: var(--text-primary); }
 
         .output-wrap { margin-top: 16px; display: flex; flex-direction: column; gap: 16px; }
         .copy-box { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .copy-box:hover { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08); transform: translateY(-2px); }
-        .copy-box > label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+        .copy-box > label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; -webkit-user-select: none; user-select: none; }
         
         .out-btn {
             width: 100%; font-family: var(--font-ui); font-size: 0.95rem; padding: 12px 16px;
@@ -256,12 +286,12 @@
             text-align: left; transition: all 0.2s ease;
         }
         .out-btn:hover { background: var(--focus-ring); border-color: var(--text-secondary); }
-        .copied { font-size: 0.85rem; margin-top: 8px; color: var(--text-secondary); opacity: 0; transition: opacity 0.25s ease; text-align: right; font-weight: 500; }
+        .copied { font-size: 0.85rem; margin-top: 8px; color: var(--text-secondary); opacity: 0; transition: opacity 0.25s ease; text-align: right; font-weight: 500; -webkit-user-select: none; user-select: none; }
         .copied.show { opacity: 1; }
 
         .pixiv-extras { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); }
-        .pixiv-extras > label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
-        .pixiv-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+        .pixiv-extras > label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; -webkit-user-select: none; user-select: none; }
+        .pixiv-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; -webkit-user-select: none; user-select: none; }
         .pixiv-row span { font-size: 0.9rem; color: var(--text-secondary); min-width: 110px; }
         .pixiv-row .dash { min-width: auto; color: var(--text-secondary); }
         .pixiv-row input[type="number"] {
@@ -322,7 +352,7 @@
         </div>
     </header>
 
-    <main id="hub-wrapper" class="view-wrapper hidden fade-in">
+    <main id="hub-wrapper" class="view-wrapper hidden">
         <div id="hub-view">
             <div class="hub-header">
                 <h2>Hi</h2>
@@ -485,8 +515,15 @@
             dom.ghLink.classList.add('hidden');
             dom.btnSettings.classList.add('hidden');
 
+            function showWithFade(el) {
+                el.classList.remove('hidden');
+                el.classList.remove('fade-in');
+                void el.offsetWidth; // force reflow to restart animation
+                el.classList.add('fade-in');
+            }
+
             if (feature === 'readflow') {
-                dom.rfWrapper.classList.remove('hidden');
+                showWithFade(dom.rfWrapper);
                 dom.mainTitle.textContent = 'Readflow';
                 dom.btnSettings.classList.remove('hidden');
                 if (rfState.isReadingView) {
@@ -495,11 +532,11 @@
                     dom.btnHome.classList.remove('hidden');
                 }
             } else if (feature === 'streamcord') {
-                dom.scWrapper.classList.remove('hidden');
+                showWithFade(dom.scWrapper);
                 dom.mainTitle.textContent = 'Streamcord';
                 dom.btnHome.classList.remove('hidden');
             } else { // hub
-                dom.hubWrapper.classList.remove('hidden');
+                showWithFade(dom.hubWrapper);
                 dom.mainTitle.textContent = 'Lian Tools';
                 dom.ghLink.classList.remove('hidden');
             }
@@ -712,19 +749,22 @@
             if (!pNode) return;
             const spans = Array.from(pNode.childNodes).filter(c => c.nodeType === 1 && c.tagName === 'SPAN');
             if (spans.length > 100) {
+                const toFlatten = spans.slice(0, spans.length - 20);
                 let combinedText = "";
-                spans.slice(0, spans.length - 20).forEach(n => { combinedText += n.textContent; n.remove(); });
-                if (pNode.firstChild && pNode.firstChild.nodeType === 3) pNode.firstChild.nodeValue += combinedText;
-                else pNode.insertBefore(document.createTextNode(combinedText), pNode.firstChild);
+                toFlatten.forEach(n => { combinedText += n.textContent; });
+                // Insert the combined text node before the first span being replaced, then remove those spans
+                const firstSpan = toFlatten[0];
+                pNode.insertBefore(document.createTextNode(combinedText), firstSpan);
+                toFlatten.forEach(n => n.remove());
             }
         }
 
         function maintainScroll() {
             const newDocHeight = document.body.offsetHeight;
             const heightDiff = newDocHeight - rfState.lastDocHeight;
+            rfState.lastDocHeight = newDocHeight;
             if (heightDiff > 0) {
                 if (newDocHeight - (window.innerHeight + window.scrollY) < 300) window.scrollBy(0, heightDiff);
-                rfState.lastDocHeight = newDocHeight;
             }
         }
 
@@ -758,11 +798,11 @@
             if (!url) return null;
             
             const checks = [
-                { regex: /bilibili\.com/i, fn: u => [{ label: 'vxBilibili', url: `https://www.vxbilibili.com/${cleanUrl(u).match(/bilibili\.com\/(.+)$/i)?.[1]}` }] },
+                { regex: /bilibili\.com/i, fn: u => { const m = cleanUrl(u).match(/bilibili\.com\/(.+)$/i); return m ? [{ label: 'vxBilibili', url: `https://www.vxbilibili.com/${m[1]}` }] : null; } },
                 { regex: /bsky\.app/i, fn: u => { const m = cleanUrl(u).match(/bsky\.app\/(.+)$/i); return m ? [{ label: 'Normal Embed', url: `https://bskx.app/${m[1]}` }, { label: 'Direct Embed', url: `https://r.bskx.app/${m[1]}` }] : null; } },
-                { regex: /facebook\.com/i, fn: u => [{ label: 'Facebed', url: `https://facebed.com/${cleanUrl(u).match(/facebook\.com\/(.+)$/i)?.[1]}` }] },
-                { regex: /instagram\.com/i, fn: u => [{ label: 'KKInstagram', url: `https://www.kkinstagram.com/${cleanUrl(u).match(/instagram\.com\/(.+)$/i)?.[1]}` }] },
-                { regex: /newgrounds\.com/i, fn: u => [{ label: 'FixNewgrounds', url: `https://www.fixnewgrounds.com/${cleanUrl(u).match(/newgrounds\.com\/(.+)$/i)?.[1]}` }] },
+                { regex: /facebook\.com/i, fn: u => { const m = cleanUrl(u).match(/facebook\.com\/(.+)$/i); return m ? [{ label: 'Facebed', url: `https://facebed.com/${m[1]}` }] : null; } },
+                { regex: /instagram\.com/i, fn: u => { const m = cleanUrl(u).match(/instagram\.com\/(.+)$/i); return m ? [{ label: 'KKInstagram', url: `https://www.kkinstagram.com/${m[1]}` }] : null; } },
+                { regex: /newgrounds\.com/i, fn: u => { const m = cleanUrl(u).match(/newgrounds\.com\/(.+)$/i); return m ? [{ label: 'FixNewgrounds', url: `https://www.fixnewgrounds.com/${m[1]}` }] : null; } },
                 { regex: /pixiv\.net/i, fn: u => {
                     const m = cleanUrl(u).match(/pixiv\.net\/(?:en\/)?artworks\/(\d+)(?:\/(\d+))?$/i);
                     if (!m) return null;
@@ -776,10 +816,10 @@
                     r.push({ label: '__pixiv_range__', id, url: '' });
                     return r;
                 }},
-                { regex: /reddit\.com/i, fn: u => [{ label: 'Rxddit', url: `https://rxddit.com/${cleanUrl(u).match(/reddit\.com\/(.+)$/i)?.[1]}` }] },
-                { regex: /streamable\.com/i, fn: u => [{ label: 'Direct MP4', url: `https://api-f.streamable.com/api/v1/videos/${cleanUrl(u).match(/streamable\.com\/([A-Za-z0-9]+)$/i)?.[1]}/mp4` }] },
-                { regex: /tiktok\.com/i, fn: u => [{ label: 'Tnktok', url: `https://d.tnktok.com/${cleanUrl(u).match(/tiktok\.com\/(.+)$/i)?.[1]}` }] },
-                { regex: /twitch\.tv/i, fn: u => [{ label: 'fxTwitch', url: `https://fxtwitch.seria.moe/clip/${cleanUrl(u).match(/twitch\.tv\/[^/]+\/clip\/([^/]+)$/i)?.[1]}` }] },
+                { regex: /reddit\.com/i, fn: u => { const m = cleanUrl(u).match(/reddit\.com\/(.+)$/i); return m ? [{ label: 'Rxddit', url: `https://rxddit.com/${m[1]}` }] : null; } },
+                { regex: /streamable\.com/i, fn: u => { const m = cleanUrl(u).match(/streamable\.com\/([A-Za-z0-9]+)$/i); return m ? [{ label: 'Direct MP4', url: `https://api-f.streamable.com/api/v1/videos/${m[1]}/mp4` }] : null; } },
+                { regex: /tiktok\.com/i, fn: u => { const m = cleanUrl(u).match(/tiktok\.com\/(.+)$/i); return m ? [{ label: 'Tnktok', url: `https://d.tnktok.com/${m[1]}` }] : null; } },
+                { regex: /twitch\.tv/i, fn: u => { const m = cleanUrl(u).match(/twitch\.tv\/[^/]+\/clip\/([^/]+)$/i); return m ? [{ label: 'fxTwitch', url: `https://fxtwitch.seria.moe/clip/${m[1]}` }] : null; } },
                 { regex: /(?:x\.com|twitter\.com)/i, fn: u => { const m = cleanUrl(u).match(/(?:x\.com|twitter\.com)\/(.+)$/i); return m ? [{ label: 'Normal Embed', url: `https://fixupx.com/${m[1]}` }, { label: 'Direct Embed', url: `https://d.fixupx.com/${m[1]}` }] : null; } }
             ];
 
@@ -801,6 +841,9 @@
             btn.addEventListener('click', () => {
                 navigator.clipboard.writeText(url).then(() => {
                     copied.classList.add('show'); clearTimeout(t); t = setTimeout(() => copied.classList.remove('show'), 1800);
+                }).catch(() => {
+                    copied.textContent = 'Copy failed'; copied.classList.add('show');
+                    clearTimeout(t); t = setTimeout(() => { copied.classList.remove('show'); copied.textContent = 'Copied to clipboard!'; }, 1800);
                 });
             });
             box.append(lbl, btn, copied);
