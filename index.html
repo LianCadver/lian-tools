@@ -21,7 +21,6 @@
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
             --focus-ring: rgba(0, 0, 0, 0.1);
             --error: #d93025;
-            --success: #1e8e3e;
             
             /* Typography Options */
             --font-ui: 'Inter', sans-serif;
@@ -44,7 +43,6 @@
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
             --focus-ring: rgba(255, 255, 255, 0.15);
             --error: #f28b82;
-            --success: #81c995;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -101,11 +99,10 @@
 
         .icon-btn {
             width: 40px; height: 40px; border-radius: 50%;
-            color: var(--text-secondary); position: relative;
+            color: var(--text-secondary);
         }
         .icon-btn:hover { color: var(--accent); background: var(--focus-ring); }
         .icon-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        .icon-btn.active { color: var(--accent); background: var(--focus-ring); }
 
         .back-btn { font-size: 0.95rem; color: var(--text-secondary); gap: 8px; padding: 8px 12px; border-radius: 6px; }
         .back-btn:hover { color: var(--accent); background: var(--focus-ring); }
@@ -155,22 +152,7 @@
         }
         #progress-bar { height: 100%; width: 0%; background: var(--accent); transition: width 0.1s linear; }
 
-        .rf-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        .rf-tab { padding: 8px 16px; border-radius: 8px; color: var(--text-secondary); font-weight: 500; font-size: 0.95rem; transition: all 0.2s ease; }
-        .rf-tab:hover { color: var(--text-primary); }
-        .rf-tab.active { color: var(--text-primary); background: var(--focus-ring); }
-
-        #submit-inner, #notes-inner { max-width: 720px; margin: 0 auto; width: 100%; animation: fadeIn 0.4s ease; }
-        
-        .continue-banner { background: var(--focus-ring); border: 1px solid var(--border); border-radius: 12px; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-        .continue-text p { margin: 0; font-weight: 600; color: var(--text-primary); font-size: 1.05rem; }
-        .continue-text span { font-size: 0.85rem; color: var(--text-secondary); }
-        .continue-actions { display: flex; gap: 8px; }
-        .btn-continue { background: var(--accent); color: var(--bg); padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 500; transition: transform 0.2s; }
-        .btn-continue:hover { transform: translateY(-1px); background: var(--accent-hover); }
-        .btn-discard { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; padding: 8px 16px; border-radius: 30px; }
-        .btn-discard:hover { color: var(--error); background: rgba(217, 48, 37, 0.1); }
-
+        #submit-view { max-width: 720px; margin: 0 auto; width: 100%; animation: fadeIn 0.4s ease; }
         .submit-header { margin-bottom: 24px; text-align: center; }
         .submit-header h2 { font-size: 1.5rem; margin-bottom: 8px; color: var(--text-primary); }
         .submit-header p { color: var(--text-secondary); font-size: 0.95rem; }
@@ -208,29 +190,6 @@
         #interaction-hint svg { width: 16px; height: 16px; stroke: currentColor; }
         #completion-banner { text-align: center; padding: 60px 0; color: var(--text-secondary); font-style: italic; }
 
-        /* Notes UI */
-        .notes-header { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-        .note-search { flex-grow: 1; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text-primary); outline: none; transition: border-color 0.2s; }
-        .note-search:focus { border-color: var(--accent); }
-        .note-actions { display: flex; gap: 8px; }
-        .btn-note { padding: 10px 16px; border-radius: 8px; background: var(--panel-bg); border: 1px solid var(--border); font-size: 0.9rem; cursor: pointer; transition: all 0.2s; color: var(--text-primary); display: inline-flex; align-items: center; gap: 6px; }
-        .btn-note:hover { border-color: var(--accent); }
-        
-        .note-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow); position: relative; transition: border-color 0.2s; }
-        .note-card:focus-within { border-color: var(--accent); }
-        .note-card textarea { width: 100%; min-height: 80px; background: transparent; border: none; resize: vertical; color: var(--text-primary); font-family: var(--font-ui); font-size: 0.95rem; line-height: 1.5; outline: none; margin-bottom: 8px; }
-        .note-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid var(--border); }
-        .note-date { font-size: 0.8rem; color: var(--text-secondary); }
-        .note-card-actions { display: flex; gap: 8px; }
-        .btn-small { font-size: 0.85rem; padding: 6px 12px; border-radius: 6px; background: transparent; border: 1px solid var(--border); color: var(--text-secondary); transition: all 0.2s; }
-        .btn-small:hover { background: var(--focus-ring); color: var(--text-primary); border-color: var(--text-secondary); }
-        .btn-small.danger:hover { color: var(--error); border-color: var(--error); background: rgba(217, 48, 37, 0.1); }
-        .btn-small.primary { background: var(--accent); color: var(--bg); border: none; }
-        .btn-small.primary:hover { background: var(--accent-hover); color: var(--bg); }
-
-        .toast { position: fixed; bottom: 24px; right: 24px; background: var(--text-primary); color: var(--bg); padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; z-index: 1000; opacity: 0; transform: translateY(10px); transition: all 0.3s ease; pointer-events: none; }
-        .toast.show { opacity: 1; transform: translateY(0); }
-
         /* ------------------ READFLOW SETTINGS ------------------ */
         #settings-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.2);
@@ -241,7 +200,6 @@
         #settings-panel {
             background: var(--panel-bg); width: 90%; max-width: 400px; border-radius: 16px; padding: 32px;
             box-shadow: var(--shadow); transform: translateY(20px); transition: transform 0.3s ease; border: 1px solid var(--border);
-            max-height: 90vh; overflow-y: auto;
         }
         #settings-overlay.active #settings-panel { transform: translateY(0); }
         
@@ -329,8 +287,6 @@
             #text-input { height: 60vh; }
             #settings-panel { padding: 24px; }
             .pixiv-row span { min-width: 100%; margin-bottom: -4px; }
-            .continue-banner { flex-direction: column; align-items: flex-start; }
-            .continue-actions { width: 100%; justify-content: flex-end; }
         }
     </style>
 </head>
@@ -355,9 +311,6 @@
             <h1 class="app-title" id="main-title">Lian Tools</h1>
         </div>
         <div class="nav-right">
-            <button id="btn-save-progress" class="icon-btn hidden" aria-label="Save Progress" title="Save Progress">
-                <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            </button>
             <button id="btn-theme" class="icon-btn" aria-label="Toggle theme">
                 <svg id="icon-sun" class="hidden" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                 <svg id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -390,57 +343,16 @@
     <div id="progress-container" class="hidden">
         <div id="progress-bar"></div>
     </div>
-    
     <main id="readflow-wrapper" class="view-wrapper hidden">
-        <div id="rf-ui-container" style="max-width: 720px; margin: 0 auto; width: 100%;">
-            <div class="rf-tabs" id="rf-tabs">
-                <button id="tab-read" class="rf-tab active">Read</button>
-                <button id="tab-notes" class="rf-tab">Notes</button>
+        <div id="submit-view">
+            <div class="submit-header">
+                <h2>Paste your text</h2>
+                <p>Read freely without distractions. Reveal at your own pace.</p>
             </div>
-
-            <div id="submit-inner">
-                <div id="continue-banner" class="continue-banner hidden">
-                    <div class="continue-text">
-                        <p>Continue Reading?</p>
-                        <span id="continue-progress-text">Progress: 0%</span>
-                    </div>
-                    <div class="continue-actions">
-                        <button id="btn-discard" class="btn-discard">Discard Progress</button>
-                        <button id="btn-continue" class="btn-continue">Resume</button>
-                    </div>
-                </div>
-
-                <div class="submit-header">
-                    <h2>Paste your text</h2>
-                    <p>Read freely without distractions. Reveal at your own pace.</p>
-                </div>
-                <textarea id="text-input" placeholder="Paste an article, essay, or chapter here..." aria-label="Text to read"></textarea>
-                <div class="submit-footer">
-                    <span class="char-count" id="char-count">0 characters</span>
-                    <button id="btn-start" class="start-btn" disabled>Start Reading</button>
-                </div>
-            </div>
-
-            <div id="notes-inner" class="hidden">
-                <div class="notes-header">
-                    <input type="text" id="note-search" class="note-search" placeholder="Search notes..." aria-label="Search Notes">
-                    <div class="note-actions">
-                        <button id="btn-add-note" class="btn-note">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            Add
-                        </button>
-                        <button id="btn-export-notes" class="btn-note">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Export
-                        </button>
-                        <label class="btn-note btn-import-label">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                            <input type="file" id="btn-import-notes" accept=".json" hidden>
-                            Import
-                        </label>
-                    </div>
-                </div>
-                <div id="notes-list"></div>
+            <textarea id="text-input" placeholder="Paste an article, essay, or chapter here..." aria-label="Text to read"></textarea>
+            <div class="submit-footer">
+                <span class="char-count" id="char-count">0 characters</span>
+                <button id="btn-start" class="start-btn" disabled>Start Reading</button>
             </div>
         </div>
 
@@ -475,13 +387,6 @@
                 </select>
             </div>
             <div class="setting-group">
-                <label for="mode-select">Reading Mode</label>
-                <select id="mode-select" class="style-select">
-                    <option value="hold">Hold to Read</option>
-                    <option value="toggle">Toggle Mode</option>
-                </select>
-            </div>
-            <div class="setting-group">
                 <label for="size-slider"><span>Font Size</span> <span id="size-val" class="setting-val">20px</span></label>
                 <input type="range" id="size-slider" min="14" max="36" step="1" value="20">
             </div>
@@ -489,7 +394,7 @@
                 <label for="speed-slider"><span>Reveal Speed</span> <span id="speed-val" class="setting-val">40 cps</span></label>
                 <input type="range" id="speed-slider" min="10" max="150" step="5" value="40">
             </div>
-            <div class="setting-group" id="delay-group">
+            <div class="setting-group">
                 <label for="delay-slider"><span>Hold Delay</span> <span id="delay-val" class="setting-val">200ms</span></label>
                 <input type="range" id="delay-slider" min="0" max="800" step="50" value="200">
             </div>
@@ -518,8 +423,6 @@
         </div>
     </main>
 
-    <div id="toast" class="toast">Action completed</div>
-
     <script>
         /** --- Global Core & Navigation --- **/
         const dom = {
@@ -530,10 +433,8 @@
             btnHome: document.getElementById('btn-home'),
             btnRfBack: document.getElementById('btn-rf-back'),
             btnSettings: document.getElementById('btn-settings'),
-            btnSaveProgress: document.getElementById('btn-save-progress'),
             ghLink: document.getElementById('gh-link'),
             mainTitle: document.getElementById('main-title'),
-            toast: document.getElementById('toast'),
             
             // Views
             hubWrapper: document.getElementById('hub-wrapper'),
@@ -564,12 +465,6 @@
         dom.btnTheme.addEventListener('click', toggleTheme);
         applyTheme();
 
-        function showToast(msg) {
-            dom.toast.textContent = msg;
-            dom.toast.classList.add('show');
-            setTimeout(() => dom.toast.classList.remove('show'), 2500);
-        }
-
         // Router
         function navigate(feature) {
             currentFeature = feature;
@@ -585,7 +480,6 @@
             dom.btnRfBack.classList.add('hidden');
             dom.ghLink.classList.add('hidden');
             dom.btnSettings.classList.add('hidden');
-            dom.btnSaveProgress.classList.add('hidden');
 
             if (feature === 'readflow') {
                 dom.rfWrapper.classList.remove('hidden');
@@ -593,10 +487,8 @@
                 dom.btnSettings.classList.remove('hidden');
                 if (rfState.isReadingView) {
                     dom.btnRfBack.classList.remove('hidden');
-                    dom.btnSaveProgress.classList.remove('hidden');
                 } else {
                     dom.btnHome.classList.remove('hidden');
-                    checkReadingState(); // check for saved state when entering submit view
                 }
             } else if (feature === 'streamcord') {
                 dom.scWrapper.classList.remove('hidden');
@@ -614,17 +506,7 @@
 
         /** --- Readflow Feature --- **/
         const rfDOM = {
-            uiContainer: document.getElementById('rf-ui-container'),
-            tabRead: document.getElementById('tab-read'),
-            tabNotes: document.getElementById('tab-notes'),
-            viewSubmitInner: document.getElementById('submit-inner'),
-            viewNotesInner: document.getElementById('notes-inner'),
-            
-            continueBanner: document.getElementById('continue-banner'),
-            btnContinue: document.getElementById('btn-continue'),
-            btnDiscard: document.getElementById('btn-discard'),
-            continueProgressText: document.getElementById('continue-progress-text'),
-
+            viewSubmit: document.getElementById('submit-view'),
             viewReader: document.getElementById('reader-view'),
             textInput: document.getElementById('text-input'),
             btnStart: document.getElementById('btn-start'),
@@ -640,117 +522,69 @@
             btnCloseSettings: document.getElementById('btn-close-settings'),
             btnResetSettings: document.getElementById('btn-reset-settings'),
             fontSelect: document.getElementById('font-select'),
-            modeSelect: document.getElementById('mode-select'),
             sizeSlider: document.getElementById('size-slider'),
             speedSlider: document.getElementById('speed-slider'),
             delaySlider: document.getElementById('delay-slider'),
-            delayGroup: document.getElementById('delay-group'),
             sizeVal: document.getElementById('size-val'),
             speedVal: document.getElementById('speed-val'),
-            delayVal: document.getElementById('delay-val'),
-
-            // Notes DOM
-            noteSearch: document.getElementById('note-search'),
-            notesList: document.getElementById('notes-list'),
-            btnAddNote: document.getElementById('btn-add-note'),
-            btnExportNotes: document.getElementById('btn-export-notes'),
-            btnImportNotes: document.getElementById('btn-import-notes')
+            delayVal: document.getElementById('delay-val')
         };
 
-        const DEFAULT_SETTINGS = { font: "'Source Serif 4', serif", fontSize: 20, speed: 40, delay: 200, readMode: 'hold' };
+        const DEFAULT_SETTINGS = { font: "'Source Serif 4', serif", fontSize: 20, speed: 40, delay: 200 };
         let rfSettings = { ...DEFAULT_SETTINGS };
         const rfState = {
-            text: "", paragraphs: [], pIndex: 0, cIndex: 0, totalChars: 0, revealedChars: 0,
+            paragraphs: [], pIndex: 0, cIndex: 0, totalChars: 0, revealedChars: 0,
             isReadingView: false, isHolding: false, isCompleted: false,
             holdTimer: null, animationFrame: null, lastTime: 0, charAccumulator: 0,
             currentPNode: null, lastDocHeight: 0, touchStartY: 0
         };
-        let rfNotes = [];
-        let saveTimer = null;
 
         function initReadflow() {
-            // Load settings
             const saved = localStorage.getItem('readflow_prefs');
             if (saved) { try { rfSettings = { ...DEFAULT_SETTINGS, ...JSON.parse(saved) }; } catch (e) {} }
             
-            // Load notes
-            const savedNotes = localStorage.getItem('liantools_notes');
-            if (savedNotes) { try { rfNotes = JSON.parse(savedNotes); } catch(e) {} }
-
             applyRfSettingsToUI();
             updateRfSettingsVars();
             checkRfInputContent();
-            renderNotes();
-
-            // Tabs
-            rfDOM.tabRead.addEventListener('click', () => switchRfTab('read'));
-            rfDOM.tabNotes.addEventListener('click', () => switchRfTab('notes'));
-
-            // Submit View Events
-            rfDOM.textInput.addEventListener('input', checkRfInputContent);
-            rfDOM.btnStart.addEventListener('click', () => switchToReader(false));
-            dom.btnRfBack.addEventListener('click', switchToSubmit);
-            dom.btnSaveProgress.addEventListener('click', () => { saveReadingProgress(); showToast("Progress saved manually"); });
-            rfDOM.btnContinue.addEventListener('click', restoreReadingProgress);
-            rfDOM.btnDiscard.addEventListener('click', discardReadingProgress);
             
-            // Settings Events
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                rfDOM.hintText.textContent = "Press and hold to read";
+            }
+
+            rfDOM.textInput.addEventListener('input', checkRfInputContent);
+            rfDOM.btnStart.addEventListener('click', switchToReader);
+            dom.btnRfBack.addEventListener('click', switchToSubmit);
+            
             dom.btnSettings.addEventListener('click', () => rfDOM.settingsOverlay.classList.add('active'));
             rfDOM.btnCloseSettings.addEventListener('click', () => rfDOM.settingsOverlay.classList.remove('active'));
             rfDOM.settingsOverlay.addEventListener('click', (e) => { if(e.target === rfDOM.settingsOverlay) rfDOM.settingsOverlay.classList.remove('active'); });
             rfDOM.btnResetSettings.addEventListener('click', () => { rfSettings = { ...DEFAULT_SETTINGS }; applyRfSettingsToUI(); updateRfSettingsVars(); });
             
             rfDOM.fontSelect.addEventListener('change', updateRfSettingsVars);
-            rfDOM.modeSelect.addEventListener('change', updateRfSettingsVars);
             rfDOM.sizeSlider.addEventListener('input', updateRfSettingsVars);
             rfDOM.speedSlider.addEventListener('input', updateRfSettingsVars);
             rfDOM.delaySlider.addEventListener('input', updateRfSettingsVars);
 
-            // Notes Events
-            rfDOM.noteSearch.addEventListener('input', renderNotes);
-            rfDOM.btnAddNote.addEventListener('click', createNote);
-            rfDOM.btnExportNotes.addEventListener('click', exportNotes);
-            rfDOM.btnImportNotes.addEventListener('change', importNotes);
-
-            // Interaction Events
-            document.addEventListener('mousedown', (e) => { if (isValidRfTarget(e) && e.button === 0) handleInteractionStart(); });
-            document.addEventListener('mouseup', handleInteractionEnd);
-            document.addEventListener('mouseleave', handleInteractionEnd);
-            document.addEventListener('touchstart', (e) => { if (!isValidRfTarget(e)) return; rfState.touchStartY = e.touches[0].clientY; handleInteractionStart(true); }, { passive: true });
-            document.addEventListener('touchmove', (e) => { if (Math.abs(e.touches[0].clientY - rfState.touchStartY) > 10) handleInteractionEnd(); }, { passive: true });
-            document.addEventListener('touchend', handleInteractionEnd);
-            document.addEventListener('touchcancel', handleInteractionEnd);
-            document.addEventListener('keydown', (e) => { if (e.code === 'Space' && isValidRfTarget(e)) { e.preventDefault(); if (!e.repeat) handleInteractionStart(); } });
-            document.addEventListener('keyup', (e) => { if (e.code === 'Space') handleInteractionEnd(); });
-
-            // Auto-save on unload
-            window.addEventListener('beforeunload', () => { if (rfState.isReadingView) saveReadingProgress(); });
-            document.addEventListener('visibilitychange', () => { if (document.hidden && rfState.isReadingView) saveReadingProgress(); });
-        }
-
-        // --- Core UI & Settings ---
-        function switchRfTab(tab) {
-            if (tab === 'notes') {
-                rfDOM.tabNotes.classList.add('active'); rfDOM.tabRead.classList.remove('active');
-                rfDOM.viewNotesInner.classList.remove('hidden'); rfDOM.viewSubmitInner.classList.add('hidden');
-            } else {
-                rfDOM.tabRead.classList.add('active'); rfDOM.tabNotes.classList.remove('active');
-                rfDOM.viewSubmitInner.classList.remove('hidden'); rfDOM.viewNotesInner.classList.add('hidden');
-            }
+            document.addEventListener('mousedown', (e) => { if (isValidRfTarget(e) && e.button === 0) startHold(); });
+            document.addEventListener('mouseup', stopHold);
+            document.addEventListener('mouseleave', stopHold);
+            document.addEventListener('touchstart', (e) => { if (!isValidRfTarget(e)) return; rfState.touchStartY = e.touches[0].clientY; startHold(); }, { passive: true });
+            document.addEventListener('touchmove', (e) => { if (Math.abs(e.touches[0].clientY - rfState.touchStartY) > 10) stopHold(); }, { passive: true });
+            document.addEventListener('touchend', stopHold);
+            document.addEventListener('touchcancel', stopHold);
+            document.addEventListener('keydown', (e) => { if (e.code === 'Space' && isValidRfTarget(e)) { e.preventDefault(); if (!e.repeat) startHold(); } });
+            document.addEventListener('keyup', (e) => { if (e.code === 'Space') stopHold(); });
         }
 
         function applyRfSettingsToUI() {
             rfDOM.fontSelect.value = rfSettings.font;
-            rfDOM.modeSelect.value = rfSettings.readMode || 'hold';
             rfDOM.sizeSlider.value = rfSettings.fontSize;
             rfDOM.speedSlider.value = rfSettings.speed;
             rfDOM.delaySlider.value = rfSettings.delay;
-            updateHintText();
         }
 
         function updateRfSettingsVars() {
             rfSettings.font = rfDOM.fontSelect.value;
-            rfSettings.readMode = rfDOM.modeSelect.value;
             rfSettings.fontSize = parseInt(rfDOM.sizeSlider.value, 10);
             rfSettings.speed = parseInt(rfDOM.speedSlider.value, 10);
             rfSettings.delay = parseInt(rfDOM.delaySlider.value, 10);
@@ -759,23 +593,11 @@
             rfDOM.speedVal.textContent = `${rfSettings.speed} cps`;
             rfDOM.delayVal.textContent = `${rfSettings.delay}ms`;
             
-            rfDOM.delayGroup.style.opacity = rfSettings.readMode === 'toggle' ? '0.5' : '1';
-            rfDOM.delayGroup.style.pointerEvents = rfSettings.readMode === 'toggle' ? 'none' : 'auto';
-
             document.documentElement.style.setProperty('--font-reader', rfSettings.font);
             document.documentElement.style.setProperty('--reader-size', `${rfSettings.fontSize}px`);
             
             localStorage.setItem('readflow_prefs', JSON.stringify(rfSettings));
             rfState.lastDocHeight = document.body.offsetHeight;
-            updateHintText();
-        }
-
-        function updateHintText() {
-            const isTouch = ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-            const actionText = isTouch ? 'Touch' : 'Left-Click or Space';
-            rfDOM.hintText.textContent = rfSettings.readMode === 'toggle' 
-                ? `Tap ${actionText} to toggle reading` 
-                : `Hold ${actionText} to read`;
         }
 
         function checkRfInputContent() {
@@ -784,175 +606,62 @@
             rfDOM.btnStart.disabled = len === 0;
         }
 
-        // --- Reading State Persistence ---
-        function checkReadingState() {
-            try {
-                const savedStr = localStorage.getItem('liantools_read_state');
-                if (savedStr) {
-                    const state = JSON.parse(savedStr);
-                    if (state && state.text && state.revealedChars < state.totalChars) {
-                        const pct = Math.floor((state.revealedChars / state.totalChars) * 100);
-                        rfDOM.continueProgressText.textContent = `Progress: ${pct}%`;
-                        rfDOM.continueBanner.classList.remove('hidden');
-                        return;
-                    }
-                }
-            } catch(e) {}
-            rfDOM.continueBanner.classList.add('hidden');
-        }
-
-        function saveReadingProgress() {
-            if (!rfState.isReadingView || !rfState.text || rfState.isCompleted) return;
-            const stateToSave = {
-                text: rfState.text,
-                pIndex: rfState.pIndex,
-                cIndex: rfState.cIndex,
-                totalChars: rfState.totalChars,
-                revealedChars: rfState.revealedChars
-            };
-            localStorage.setItem('liantools_read_state', JSON.stringify(stateToSave));
-            dom.btnSaveProgress.classList.add('active');
-            setTimeout(() => dom.btnSaveProgress.classList.remove('active'), 500);
-        }
-
-        function discardReadingProgress() {
-            localStorage.removeItem('liantools_read_state');
-            rfDOM.continueBanner.classList.add('hidden');
-            rfDOM.textInput.value = '';
-            checkRfInputContent();
-            showToast("Saved progress discarded");
-        }
-
-        function restoreReadingProgress() {
-            try {
-                const state = JSON.parse(localStorage.getItem('liantools_read_state'));
-                if (!state || !state.text) return;
-                
-                rfDOM.textInput.value = state.text;
-                checkRfInputContent();
-                
-                switchToReader(true);
-                
-                // Restore state vars
-                rfState.pIndex = state.pIndex;
-                rfState.cIndex = state.cIndex;
-                rfState.revealedChars = state.revealedChars;
-                
-                // Fast-forward DOM rendering
-                rfDOM.readerContent.innerHTML = '';
-                for (let i = 0; i < rfState.pIndex; i++) {
-                    const p = document.createElement('p');
-                    p.textContent = rfState.paragraphs[i];
-                    rfDOM.readerContent.appendChild(p);
-                }
-                
-                if (rfState.pIndex < rfState.paragraphs.length) {
-                    rfState.currentPNode = document.createElement('p');
-                    rfDOM.readerContent.appendChild(rfState.currentPNode);
-                    const pastText = rfState.paragraphs[rfState.pIndex].substring(0, rfState.cIndex);
-                    rfState.currentPNode.appendChild(document.createTextNode(pastText));
-                }
-                
-                rfDOM.progressBar.style.width = `${Math.min(100, (rfState.revealedChars / rfState.totalChars) * 100)}%`;
-                window.scrollTo(0, document.body.scrollHeight);
-                showToast("Reading progress restored");
-            } catch(e) {
-                console.error("Failed to restore state", e);
-                discardReadingProgress();
-            }
-        }
-
-        // --- Reading Interaction Logic ---
-        function switchToReader(isRestoring = false) {
+        function switchToReader() {
             const text = rfDOM.textInput.value.trim();
             if (!text) return;
 
-            rfState.text = text;
             rfState.paragraphs = text.split(/\n+/);
             rfState.totalChars = text.length;
-            
-            if (!isRestoring) {
-                rfState.pIndex = 0; rfState.cIndex = 0; rfState.revealedChars = 0; rfState.currentPNode = null;
-                rfDOM.readerContent.innerHTML = '';
-                rfDOM.progressBar.style.width = '0%';
-                
-                // Overwrite any saved state if starting fresh with new text
-                saveReadingProgress(); 
-            }
-            
-            rfState.isCompleted = false;
+            rfState.pIndex = 0; rfState.cIndex = 0; rfState.revealedChars = 0; rfState.isCompleted = false; rfState.currentPNode = null;
             rfState.lastDocHeight = document.body.offsetHeight;
+            
+            rfDOM.readerContent.innerHTML = '';
+            rfDOM.progressBar.style.width = '0%';
             rfDOM.completionBanner.classList.add('hidden');
             
-            rfDOM.uiContainer.classList.add('hidden');
+            rfDOM.viewSubmit.classList.add('hidden');
             rfDOM.viewReader.classList.remove('hidden');
             rfDOM.progressContainer.classList.remove('hidden');
             rfDOM.interactionHint.classList.remove('hidden');
             
             dom.btnHome.classList.add('hidden');
             dom.btnRfBack.classList.remove('hidden');
-            dom.btnSaveProgress.classList.remove('hidden');
             
-            if (!isRestoring) window.scrollTo(0, 0);
+            window.scrollTo(0, 0);
             rfState.isReadingView = true;
         }
 
         function switchToSubmit() {
-            handleInteractionEnd(true); // force stop
-            saveReadingProgress();
-            
+            stopHold();
             rfDOM.viewReader.classList.add('hidden');
             rfDOM.progressContainer.classList.add('hidden');
             rfDOM.interactionHint.classList.add('hidden');
-            rfDOM.uiContainer.classList.remove('hidden');
+            rfDOM.viewSubmit.classList.remove('hidden');
             
             dom.btnRfBack.classList.add('hidden');
-            dom.btnSaveProgress.classList.add('hidden');
             dom.btnHome.classList.remove('hidden');
             
             rfState.isReadingView = false;
-            checkReadingState();
         }
 
-        function handleInteractionStart(isTouch = false) {
+        function startHold() {
             if (!rfState.isReadingView || rfState.isCompleted || currentFeature !== 'readflow') return;
-            
-            if (rfSettings.readMode === 'toggle') {
-                if (rfState.isHolding) {
-                    stopReading();
-                } else {
-                    startReading(true); // instant start for toggle
-                }
-            } else {
-                startReading(false);
+            if (!rfState.isHolding) {
+                clearTimeout(rfState.holdTimer);
+                rfState.holdTimer = setTimeout(() => {
+                    rfState.isHolding = true; rfState.lastTime = performance.now(); rfState.lastDocHeight = document.body.offsetHeight;
+                    rfDOM.interactionHint.classList.add('reading');
+                    rfState.animationFrame = requestAnimationFrame(readLoop);
+                }, rfSettings.delay);
             }
         }
 
-        function handleInteractionEnd(force = false) {
-            if (rfSettings.readMode === 'hold' || force) {
-                stopReading();
-            }
-        }
-
-        function startReading(instant = false) {
-            if (rfState.isHolding) return;
-            clearTimeout(rfState.holdTimer);
-            
-            const delay = instant ? 0 : rfSettings.delay;
-            rfState.holdTimer = setTimeout(() => {
-                rfState.isHolding = true; rfState.lastTime = performance.now(); rfState.lastDocHeight = document.body.offsetHeight;
-                rfDOM.interactionHint.classList.add('reading');
-                rfState.animationFrame = requestAnimationFrame(readLoop);
-            }, delay);
-        }
-
-        function stopReading() {
+        function stopHold() {
             clearTimeout(rfState.holdTimer);
             if (rfState.isHolding) {
                 rfState.isHolding = false;
                 cancelAnimationFrame(rfState.animationFrame);
                 if (!rfState.isCompleted && rfState.isReadingView) rfDOM.interactionHint.classList.remove('reading');
-                saveReadingProgress(); // Auto-save on pause
             }
         }
 
@@ -1016,9 +725,8 @@
         }
 
         function finishReading() {
-            rfState.isCompleted = true; rfDOM.progressBar.style.width = '100%'; stopReading();
+            rfState.isCompleted = true; rfDOM.progressBar.style.width = '100%'; stopHold();
             rfDOM.completionBanner.classList.remove('hidden'); rfDOM.interactionHint.classList.add('hidden');
-            localStorage.removeItem('liantools_read_state'); // Clear progress on completion
         }
 
         function isValidRfTarget(e) {
@@ -1027,127 +735,6 @@
             if (['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return false;
             return true;
         }
-
-        // --- Notes System Logic ---
-        function saveNotes() {
-            localStorage.setItem('liantools_notes', JSON.stringify(rfNotes));
-        }
-
-        function renderNotes() {
-            const q = rfDOM.noteSearch.value.toLowerCase();
-            rfDOM.notesList.innerHTML = '';
-            
-            const filtered = rfNotes.filter(n => n.text.toLowerCase().includes(q)).sort((a, b) => b.timestamp - a.timestamp);
-            
-            if (filtered.length === 0) {
-                rfDOM.notesList.innerHTML = `<p style="text-align:center; color:var(--text-secondary); margin-top: 32px;">No notes found.</p>`;
-                return;
-            }
-
-            filtered.forEach(note => {
-                const card = document.createElement('div');
-                card.className = 'note-card fade-in';
-                
-                const ta = document.createElement('textarea');
-                ta.value = note.text;
-                ta.placeholder = "Empty note...";
-                
-                // Auto-resize and save on input
-                ta.addEventListener('input', () => {
-                    ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight) + 'px';
-                    note.text = ta.value;
-                    note.timestamp = Date.now();
-                    clearTimeout(saveTimer);
-                    saveTimer = setTimeout(saveNotes, 500);
-                });
-
-                const footer = document.createElement('div');
-                footer.className = 'note-footer';
-                
-                const dateLabel = document.createElement('span');
-                dateLabel.className = 'note-date';
-                dateLabel.textContent = new Date(note.timestamp).toLocaleString();
-                
-                const actions = document.createElement('div');
-                actions.className = 'note-card-actions';
-                
-                const btnInsert = document.createElement('button');
-                btnInsert.className = 'btn-small primary';
-                btnInsert.textContent = 'Insert';
-                btnInsert.addEventListener('click', () => {
-                    rfDOM.textInput.value = rfDOM.textInput.value + (rfDOM.textInput.value.trim() ? '\n\n' : '') + note.text;
-                    checkRfInputContent();
-                    switchRfTab('read');
-                    showToast("Note inserted to reader");
-                });
-                
-                const btnDel = document.createElement('button');
-                btnDel.className = 'btn-small danger';
-                btnDel.textContent = 'Delete';
-                btnDel.addEventListener('click', () => {
-                    rfNotes = rfNotes.filter(n => n.id !== note.id);
-                    saveNotes();
-                    renderNotes();
-                });
-                
-                actions.append(btnDel, btnInsert);
-                footer.append(dateLabel, actions);
-                card.append(ta, footer);
-                rfDOM.notesList.appendChild(card);
-                
-                // Initial resize trigger
-                setTimeout(() => { ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight) + 'px'; }, 0);
-            });
-        }
-
-        function createNote() {
-            rfNotes.unshift({
-                id: 'note_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-                text: '',
-                timestamp: Date.now()
-            });
-            saveNotes();
-            rfDOM.noteSearch.value = '';
-            renderNotes();
-            
-            // Focus the new note
-            setTimeout(() => {
-                const firstTA = rfDOM.notesList.querySelector('textarea');
-                if(firstTA) firstTA.focus();
-            }, 50);
-        }
-
-        function exportNotes() {
-            if (rfNotes.length === 0) { showToast("No notes to export"); return; }
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(rfNotes));
-            const a = document.createElement('a');
-            a.setAttribute("href", dataStr);
-            a.setAttribute("download", `readflow_notes_${new Date().toISOString().split('T')[0]}.json`);
-            document.body.appendChild(a); a.click(); a.remove();
-        }
-
-        function importNotes(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                try {
-                    const imported = JSON.parse(event.target.result);
-                    if (Array.isArray(imported)) {
-                        // Merge, avoiding duplicate IDs if possible, but simplest is concat
-                        rfNotes = [...imported, ...rfNotes];
-                        saveNotes();
-                        renderNotes();
-                        showToast(`Imported ${imported.length} notes`);
-                    }
-                } catch(err) {
-                    showToast("Failed to parse JSON file");
-                }
-            };
-            reader.readAsText(file);
-            e.target.value = ''; // Reset input
-        }
-
 
         /** --- Streamcord Feature --- **/
         const scDOM = {
