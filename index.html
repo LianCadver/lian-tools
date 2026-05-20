@@ -5178,9 +5178,13 @@
 					const afterEl  = getDragAfterElement(e.currentTarget, e.clientY, cards);
 
 					if (afterEl == null) {
-						e.currentTarget.appendChild(ph);
+						if (ph.nextElementSibling !== null || ph.parentNode !== e.currentTarget) {
+							e.currentTarget.appendChild(ph);
+						}
 					} else {
-						e.currentTarget.insertBefore(ph, afterEl);
+						if (ph.nextElementSibling !== afterEl || ph.parentNode !== e.currentTarget) {
+							e.currentTarget.insertBefore(ph, afterEl);
+						}
 					}
 				}
 
