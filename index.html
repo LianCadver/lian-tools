@@ -3662,6 +3662,7 @@
 						// ----------------------------------------
 						// Re-render UI
 						renderHub();
+						if (window._kanbanReload) window._kanbanReload();
 						showToast('✅ Data imported successfully');
 					} catch {
 						showToast('❌ Invalid backup file');
@@ -4884,6 +4885,7 @@
 			═══════════════════════════════════════════════ */
 			function initKanban() {
 				const KB_KEY   = 'liantools_kanban';
+				const KB_SETTINGS_KEY = 'liantools_kanban_settings';
 
 				/* ─── Column definitions ─── */
 				const COLUMNS = [
@@ -4908,7 +4910,7 @@
 				];
 
 				/* ─── State ─── */
-				let state = { cards: [] }; // cards: [{id, colId, title, desc, deadline, labels:[], attachments:[]}]
+				let state = { cards: [], settings: { boardTitle: 'Kanban Board' } };
 
 				function loadState() {
 					try {
@@ -4916,10 +4918,39 @@
 						if (raw) state = JSON.parse(raw);
 					} catch {}
 					if (!Array.isArray(state.cards)) state.cards = [];
+					if (!state.settings) state.settings = { boardTitle: 'Kanban Board' };
+
+					// Load saved column definitions if present
+					try {
+						const rawSettings = localStorage.getItem(KB_SETTINGS_KEY);
+						if (rawSettings) {
+							const s = JSON.parse(rawSettings);
+							if (s.boardTitle) state.settings.boardTitle = s.boardTitle;
+							if (Array.isArray(s.columns) && s.columns.length > 0) {
+								COLUMNS.length = 0;
+								s.columns.forEach(c => COLUMNS.push(c));
+							}
+						}
+					} catch {}
 				}
 
 				function saveState() {
-					try { localStorage.setItem(KB_KEY, JSON.stringify(state)); } catch {}
+					try {
+						localStorage.setItem(KB_KEY, JSON.stringify(state));
+						localStorage.setItem(KB_SETTINGS_KEY, JSON.stringify({
+							boardTitle: state.settings.boardTitle,
+							columns: COLUMNS,
+						}));
+					} catch {}
+				}
+				
+				function saveSettings() {
+					try {
+						localStorage.setItem(KB_SETTINGS_KEY, JSON.stringify({
+							boardTitle: state.settings.boardTitle,
+							columns: COLUMNS,
+						}));
+					} catch {}
 				}
 
 				function uid() {
@@ -5418,6 +5449,7 @@
 				/* ─── Boot ─── */
 				loadState();
 				render();
+				window._kanbanReload = function() { loadState(); render(); };
 			}
 				/* ─── BOOT ───────────────────────────────────── */
 				initReadflow();
