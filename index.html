@@ -4468,17 +4468,7 @@
 					.join("\n");
 			}
 			function teNewlineBeforeUppercase(t) {
-				return t
-					.split("\n")
-					.reduce((acc, line, i, arr) => {
-						if (i > 0 && /^[A-Z]/.test(line) && arr[i - 1].trim() !== "") {
-							acc.push("", line);
-						} else {
-							acc.push(line);
-						}
-						return acc;
-					}, [])
-					.join("\n");
+				return t.replace(/([a-z])([A-Z])/g, '$1\n$2');
 			}
 			function initTextEditor() {
 				const input = document.getElementById("te-input");
