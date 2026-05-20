@@ -4705,76 +4705,9 @@
        Tracking param list based on corbindavenport/link-cleaner (GPLv3)
     ═══════════════════════════════════════════════ */
 				function initLinkCleaner() {
-					/* ─── Comprehensive tracking parameter list ───
-					   Sources: corbindavenport/link-cleaner, common UTM/ad/affiliate params
+					/* ───────────────────────────────────────────
+					   Sources: corbindavenport/link-cleaner
 					─────────────────────────────────────────── */
-					const TRACKING_PARAMS = new Set([
-						// Universal UTM / campaign
-						'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id', 'utm_source_platform', 'utm_creative_format', 'utm_marketing_tactic',
-						// Google
-						'gclid', 'gclsrc', 'gad_source', 'gbraid', 'wbraid', 'dclid', 'srsltid', '_ga', '_gl',
-						// Facebook / Meta
-						'fbclid', 'fb_action_ids', 'fb_action_types', 'fb_source', 'fb_ref', 'action_object_map', 'action_type_map', 'action_ref_map',
-						// Microsoft / Bing
-						'msclkid',
-						// Twitter / X
-						'twclid',
-						// TikTok
-						'ttclid',
-						// Pinterest
-						'epik',
-						// Snapchat
-						'ScCid',
-						// LinkedIn
-						'li_fat_id', 'li_source', 'li_medium',
-						// HubSpot
-						'_hsenc', '_hsmi', '__hssc', '__hstc', 'hsCtaTracking',
-						// Mailchimp
-						'mc_cid', 'mc_eid',
-						// Klaviyo
-						'kx',
-						// Marketo
-						'mkt_tok',
-						// Adobe / Omniture
-						's_cid', 's_kwcid',
-						// Yandex
-						'yclid', 'ysclid',
-						// Baidu
-						'bd_vid',
-						// Yahoo
-						'ysclid',
-						// Reddit
-						'rdt_cid',
-						// Outbrain
-						'obOrigUrl',
-						// Amazon affiliates / tracking (keep tag= for affiliate but strip session junk)
-						'psc', 'pd_rd_i', 'pd_rd_r', 'pd_rd_w', 'pd_rd_wg', 'pf_rd_i', 'pf_rd_m', 'pf_rd_p', 'pf_rd_r', 'pf_rd_s', 'pf_rd_t', 'ref_', 'smid',
-						// YouTube (keep v=, list=, t= but strip tracking)
-						'si', 'feature', 'pp', 'src',
-						// Spotify
-						'si',
-						// General junk
-						'ref', 'source', 'referrer', 'origin', 'nr_email_referer', 'ncid', 'cmpid', 'cid', 'mbid', 'cmp', 'camp', 'campaign_id', 'igshid', 'igsh',
-						// Drip
-						'__s',
-						// Iterable
-						'iterableEmailCampaignId', 'iterableTemplateId', 'iterableMessageId',
-						// Vero
-						'vero_conv', 'vero_id',
-						// Sailthru
-						'stm_source', 'stm_medium', 'stm_campaign',
-					]);
-					/* ─── Per-site param allowlists ───
-					   Some params are tracking on most sites but required on specific ones.
-					─────────────────────────────────────────── */
-					const SITE_KEEP = {
-						'youtube.com': new Set(['v', 'list', 't', 'start', 'end', 'index', 'ab_channel']),
-						'youtu.be': new Set(['t']),
-						'amazon.com': new Set(['tag']),
-						'amazon.co.uk': new Set(['tag']),
-						'amazon.co.jp': new Set(['tag']),
-						'open.spotify.com': new Set([]),
-					};
 					/* ─── DOM refs ─── */
 					const inputEl = document.getElementById('lc-input');
 					const clearBtn = document.getElementById('lc-clear-btn');
@@ -4788,38 +4721,101 @@
 					const noChange = document.getElementById('lc-no-change');
 					/* ─── Core cleaning function ─── */
 					function cleanUrl(raw) {
-						raw = raw.trim();
-						if (!raw) return null;
-						// Prepend scheme if missing so URL() can parse it
-						if (!/^https?:\/\//i.test(raw)) raw = 'https://' + raw;
-						let url;
-						try {
-							url = new URL(raw);
-						} catch {
-							return null;
-						}
-						// Determine per-site allowlist
-						const hostname = url.hostname.replace(/^www\./, '');
-						const siteKeep = SITE_KEEP[hostname] || new Set();
-						const removed = [];
-						const keep = new URLSearchParams();
-						for (const [key, val] of url.searchParams.entries()) {
-							const lkey = key.toLowerCase();
-							// Remove if it's in the tracking list AND not in the site-specific keeplist
-							if (TRACKING_PARAMS.has(lkey) && !siteKeep.has(lkey)) {
-								removed.push(key);
-							} else {
-								keep.append(key, val);
-							}
-						}
-						// Rebuild URL
-						url.search = keep.toString() ? '?' + keep.toString() : '';
-						// Remove trailing slash only if there was no path beyond /
-						let cleaned = url.toString();
-						return {
-							cleaned,
-							removed
-						};
+   					 raw = raw.trim();
+   					 if (!raw) return null;
+   					 if (!/^https?:\/\//i.test(raw)) raw = 'https://' + raw;
+					
+   					 let oldLink;
+   					 try {
+    					    oldLink = new URL(raw);
+   					 } catch (e) {
+     					   if (e instanceof TypeError) {
+      					      const extracted = raw.match(/https?:\/\/\S+/);
+      					      if (extracted) {
+     					           try { oldLink = new URL(extracted[0]); } catch { return null; }
+     					       } else return null;
+    					    } else return null;
+   					 }
+
+   					 // Resolve link shorteners / redirectors first
+   					 if (oldLink.host === 'l.facebook.com' && oldLink.searchParams.has('u')) {
+   					     try { oldLink = new URL(decodeURI(oldLink.searchParams.get('u'))); } catch {}
+   					 } else if (oldLink.host === 'href.li') {
+   					     try { oldLink = new URL(oldLink.href.split('?')[1]); } catch {}
+    					} else if (oldLink.host === 'www.google.com' && oldLink.pathname === '/url' && oldLink.searchParams.has('url')) {
+    					    try { oldLink = new URL(oldLink.searchParams.get('url')); } catch {}
+    					} else if (oldLink.host === 'cts.businesswire.com' && oldLink.searchParams.has('url')) {
+   					     try { oldLink = new URL(oldLink.searchParams.get('url')); } catch {}
+   					 }
+
+   					 // Build the clean base (origin + path only)
+   					 let newLink = new URL(oldLink.origin + oldLink.pathname);
+
+   					 // Track which params were on the original (after redirect resolution)
+   					 const originalParams = [...oldLink.searchParams.keys()];
+
+   					 // Keep 'q' (search query) on any site
+   					 if (oldLink.searchParams.has('q')) {
+   					     newLink.searchParams.append('q', oldLink.searchParams.get('q'));
+   					 }
+   					 // Google Play requires 'id'
+    					if (oldLink.host === 'play.google.com' && oldLink.searchParams.has('id')) {
+      					  newLink.searchParams.append('id', oldLink.searchParams.get('id'));
+   					 }
+    					// Macy's requires 'ID'
+   					 if (oldLink.host === 'www.macys.com' && oldLink.searchParams.has('ID')) {
+    					    newLink.searchParams.append('ID', oldLink.searchParams.get('ID'));
+   					 }
+   					 // YouTube
+   					 if (oldLink.host.endsWith('youtube.com') && oldLink.searchParams.has('v')) {
+   					     newLink.searchParams.append('v', oldLink.searchParams.get('v'));
+   					     if (oldLink.searchParams.has('t')) newLink.searchParams.append('t', oldLink.searchParams.get('t'));
+   					 } else if (oldLink.host.endsWith('youtube.com') && oldLink.pathname.includes('playlist') && oldLink.searchParams.has('list')) {
+   					     newLink.searchParams.append('list', oldLink.searchParams.get('list'));
+    					} else if (oldLink.host === 'youtu.be' && oldLink.searchParams.has('t')) {
+    					    newLink.searchParams.append('t', oldLink.searchParams.get('t'));
+   					 }
+   					 // Facebook story links
+   					 if (oldLink.host === 'www.facebook.com' && oldLink.pathname.includes('story.php')) {
+    					    newLink.searchParams.append('story_fbid', oldLink.searchParams.get('story_fbid'));
+    					    newLink.searchParams.append('id', oldLink.searchParams.get('id'));
+   					 }
+   					 // Amazon: strip path junk, normalize to /dp/<id>
+   					 if (oldLink.host.includes('amazon') && (oldLink.pathname.includes('/dp/') || oldLink.pathname.includes('/d/') || oldLink.pathname.includes('/product/'))) {
+      					  newLink.hostname = newLink.hostname.replace('www.', '');
+      					  const match = /(?:\/dp\/|\/product\/|\/d\/)(\w+)/.exec(oldLink.pathname);
+       					 if (match) newLink.pathname = '/dp/' + match[1];
+   					 }
+   					 // Lenovo bundleId
+    					if (oldLink.host === 'www.lenovo.com' && oldLink.searchParams.has('bundleId')) {
+    					    newLink.searchParams.append('bundleId', oldLink.searchParams.get('bundleId'));
+   					 }
+   					 // Best Buy: shorten to /site/<id>.p
+   					 if (oldLink.host === 'www.bestbuy.com' && oldLink.pathname.includes('.p')) {
+   					     const match = /\/(\d+)\.p/.exec(oldLink.pathname);
+   					     if (match) newLink.pathname = '/site/' + match[1] + '.p';
+   					 }
+   					 // Xiaohongshu requires xsec_token
+   					 if (oldLink.host === 'www.xiaohongshu.com' && oldLink.searchParams.has('xsec_token')) {
+   					     newLink.searchParams.append('xsec_token', oldLink.searchParams.get('xsec_token'));
+   					 }
+   					 // Apple WeatherKit alert links
+  					  if (oldLink.host === 'weatherkit.apple.com') {
+   					     ['lang', 'party', 'ids'].forEach(p => {
+   					         if (oldLink.searchParams.has(p)) newLink.searchParams.append(p, oldLink.searchParams.get(p));
+   					     });
+   					 }
+   					 // Webtoon episode links
+  					  if (oldLink.host === 'www.webtoons.com' && oldLink.searchParams.has('title_no') && oldLink.searchParams.has('episode_no')) {
+   					     newLink.searchParams.append('title_no', oldLink.searchParams.get('title_no'));
+   					     newLink.searchParams.append('episode_no', oldLink.searchParams.get('episode_no'));
+   					 }
+
+   					 // Compute removed params (what was on oldLink but isn't on newLink)
+  					  const keptKeys = new Set(newLink.searchParams.keys());
+  					  const removed = originalParams.filter(k => !keptKeys.has(k));
+
+ 					   return { cleaned: newLink.toString(), removed };
 					}
 					/* ─── UI update ─── */
 					function processInput() {
