@@ -712,6 +712,35 @@
 				font-size: 0.9rem;
 			}
 
+			.submit-actions {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+				flex-wrap: wrap;
+			}
+
+			.rf-sec-btn {
+				background: var(--panel-bg);
+				border: 1px solid var(--border);
+				color: var(--text-secondary);
+				padding: 10px 18px;
+				font-size: 0.95rem;
+				font-weight: 500;
+				border-radius: 30px;
+				transition: all 0.2s ease;
+			}
+
+			.rf-sec-btn:hover:not(:disabled) {
+				background: var(--focus-ring);
+				color: var(--text-primary);
+				border-color: var(--text-primary);
+			}
+
+			.rf-sec-btn:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+
 			.start-btn {
 				background: var(--accent);
 				color: var(--bg);
@@ -731,6 +760,108 @@
 				opacity: 0.5;
 				cursor: not-allowed;
 				transform: none;
+			}
+
+			/* Readflow Notes Modal */
+			#rf-notes-overlay {
+				position: fixed;
+				top: 0; left: 0; right: 0; bottom: 0;
+				background: rgba(0, 0, 0, 0.2);
+				backdrop-filter: blur(4px);
+				-webkit-backdrop-filter: blur(4px);
+				z-index: 1000;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.3s ease;
+			}
+			#rf-notes-overlay.active {
+				opacity: 1;
+				pointer-events: auto;
+			}
+			#rf-notes-panel {
+				background: var(--panel-bg);
+				width: 90%;
+				max-width: 500px;
+				max-height: 80vh;
+				border-radius: 16px;
+				padding: 32px;
+				box-shadow: var(--shadow);
+				transform: translateY(20px);
+				transition: transform 0.3s ease;
+				border: 1px solid var(--border);
+				display: flex;
+				flex-direction: column;
+			}
+			#rf-notes-overlay.active #rf-notes-panel {
+				transform: translateY(0);
+			}
+			.rf-notes-list {
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+				overflow-y: auto;
+				padding-right: 4px;
+			}
+			.rf-note-item {
+				background: var(--bg);
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				padding: 14px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 12px;
+			}
+			.rf-note-info {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				overflow: hidden;
+			}
+			.rf-note-title {
+				font-weight: 600;
+				font-size: 0.95rem;
+				color: var(--text-primary);
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.rf-note-meta {
+				font-size: 0.8rem;
+				color: var(--text-secondary);
+			}
+			.rf-note-actions {
+				display: flex;
+				gap: 8px;
+				flex-shrink: 0;
+			}
+			.rf-note-btn {
+				padding: 6px 14px;
+				font-size: 0.85rem;
+				border-radius: 20px;
+				border: 1px solid var(--border);
+				background: var(--bg);
+				color: var(--text-secondary);
+				transition: all 0.2s;
+			}
+			.rf-note-btn.load:hover {
+				background: var(--accent);
+				color: var(--bg);
+				border-color: var(--accent);
+			}
+			.rf-note-btn.del:hover {
+				background: var(--error);
+				color: #fff;
+				border-color: var(--error);
+			}
+			.rf-notes-empty {
+				text-align: center;
+				color: var(--text-secondary);
+				padding: 20px 0;
+				font-size: 0.95rem;
 			}
 
 			#reader-view {
@@ -1321,6 +1452,17 @@
 
 				#text-input {
 					height: 60vh;
+				}
+
+				.submit-footer {
+					flex-direction: column;
+					gap: 16px;
+					align-items: flex-start;
+				}
+
+				.submit-actions {
+					width: 100%;
+					justify-content: space-between;
 				}
 
 				#settings-panel {
@@ -2727,14 +2869,12 @@
 				</button>
 			</div>
 		</header>
-		<!-- Hub -->
 		<main id="hub-wrapper" class="view-wrapper hidden">
 			<div id="hub-view">
 				<div class="hub-header">
 					<h2>Hi</h2>
 					<p>Check out these cool stuff I made</p>
 				</div>
-				<!-- Controls: search + sort + import/export -->
 				<div class="hub-controls">
 					<div class="hub-search-wrap">
 						<svg viewBox="0 0 24 24">
@@ -2771,15 +2911,12 @@
 							</svg>
 							<span class="data-btn-label">Import</span>
 						</button>
-						<!-- Hidden file input for import -->
 						<input type="file" id="import-file-input" accept=".json" style="display:none" aria-hidden="true" />
 					</div>
 				</div>
-				<!-- Card grid (rendered by JS) -->
 				<div class="hub-grid" id="hub-grid" role="list"></div>
 			</div>
 		</main>
-		<!-- Readflow -->
 		<div id="progress-container" class="hidden">
 			<div id="progress-bar"></div>
 		</div>
@@ -2792,7 +2929,11 @@
 				<textarea id="text-input" placeholder="Paste an article, essay, or chapter here…" aria-label="Text to read"></textarea>
 				<div class="submit-footer">
 					<span class="char-count" id="char-count">0 characters</span>
-					<button id="btn-start" class="start-btn" disabled>Start Reading</button>
+					<div class="submit-actions">
+						<button id="btn-view-notes" class="rf-sec-btn">My Notes</button>
+						<button id="btn-save-note" class="rf-sec-btn" disabled>Save Note</button>
+						<button id="btn-start" class="start-btn" disabled>Start Reading</button>
+					</div>
 				</div>
 				<div id="resume-banner" class="hidden">
 					<div class="resume-info">
@@ -2817,7 +2958,22 @@
 				<span id="hint-text">Hold Space, Left-Click, or Touch to read</span>
 			</div>
 		</main>
-		<!-- Readflow settings -->
+		
+		<div id="rf-notes-overlay">
+			<aside id="rf-notes-panel" role="dialog" aria-labelledby="rf-notes-title">
+				<div class="settings-header">
+					<h3 id="rf-notes-title">Saved Notes</h3>
+					<button id="btn-close-notes" class="icon-btn close-btn" aria-label="Close notes">
+						<svg viewBox="0 0 24 24">
+							<line x1="18" y1="6" x2="6" y2="18" />
+							<line x1="6" y1="6" x2="18" y2="18" />
+						</svg>
+					</button>
+				</div>
+				<div id="rf-notes-list" class="rf-notes-list"></div>
+			</aside>
+		</div>
+
 		<div id="settings-overlay">
 			<aside id="settings-panel" role="dialog" aria-labelledby="settings-title">
 				<div class="settings-header">
@@ -2864,7 +3020,6 @@
 				<button id="btn-reset-settings" class="reset-btn">Reset to Defaults</button>
 			</aside>
 		</div>
-		<!-- Streamcord -->
 		<main id="streamcord-wrapper" class="view-wrapper hidden">
 			<div class="sc-container fade-in">
 				<div class="header">
@@ -2891,14 +3046,12 @@
 				<div class="output-wrap" id="sc-out-wrap"></div>
 			</div>
 		</main>
-		<!-- Text Editor -->
 		<main id="texteditor-wrapper" class="view-wrapper hidden">
 			<div class="te-container fade-in">
 				<div class="te-header">
 					<h2>Text Editor</h2>
 					<p>Transform, clean, and inspect your text with ease.</p>
 				</div>
-				<!-- Toolbar: Case Converters -->
 				<div class="te-toolbar">
 					<div class="te-toolbar-group">
 						<button class="te-btn" id="te-upper" title="UPPERCASE">UPPERCASE</button>
@@ -2918,11 +3071,9 @@
 						<button class="te-btn" id="te-settings-btn" title="Editor preferences" aria-label="Editor preferences">⚙ Prefs</button>
 					</div>
 				</div>
-				<!-- Editor -->
 				<div class="te-editor-wrap">
 					<textarea id="te-input" placeholder="Paste or type your text here…" aria-label="Text editor input" spellcheck="true"></textarea>
 				</div>
-				<!-- Live stats -->
 				<div class="te-stats">
 					<span>
 						<strong id="te-chars">0</strong> chars </span>
@@ -2933,7 +3084,6 @@
 				</div>
 			</div>
 		</main>
-		<!-- Text Editor Settings -->
 		<div id="te-settings-overlay">
 			<aside id="te-settings-panel" role="dialog" aria-labelledby="te-settings-title">
 				<div class="settings-header">
@@ -2966,21 +3116,18 @@
 				<button id="te-btn-reset-settings" class="reset-btn">Reset to Defaults</button>
 			</aside>
 		</div>
-		<!-- Encoding & Decoding Tool -->
 		<main id="encode-wrapper" class="view-wrapper hidden">
 			<div class="enc-container fade-in">
 				<div class="enc-header">
 					<h2>Encoding &amp; Decoding</h2>
 					<p>Convert between bases and encode or decode common formats.</p>
 				</div>
-				<!-- Tab navigation -->
 				<div class="enc-tabs" role="tablist">
 					<button class="enc-tab active" data-tab="base" role="tab">Base Converter</button>
 					<button class="enc-tab" data-tab="base64" role="tab">Base64</button>
 					<button class="enc-tab" data-tab="url" role="tab">URL</button>
 					<button class="enc-tab" data-tab="html" role="tab">HTML Entities</button>
 				</div>
-				<!-- ── Base Converter ── -->
 				<div class="enc-panel active" id="enc-panel-base">
 					<div class="enc-base-grid" id="enc-base-grid">
 						<div class="enc-base-field">
@@ -3006,7 +3153,6 @@
 					</div>
 					<div class="enc-error-msg" id="enc-base-error"></div>
 				</div>
-				<!-- ── Base64 ── -->
 				<div class="enc-panel" id="enc-panel-base64">
 					<div class="enc-io">
 						<div class="enc-col">
@@ -3028,7 +3174,6 @@
 					</div>
 					<div class="enc-error-msg" id="enc-b64-error"></div>
 				</div>
-				<!-- ── URL Encode/Decode ── -->
 				<div class="enc-panel" id="enc-panel-url">
 					<div class="enc-io">
 						<div class="enc-col">
@@ -3050,7 +3195,6 @@
 					</div>
 					<div class="enc-error-msg" id="enc-url-error"></div>
 				</div>
-				<!-- ── HTML Entity Encode/Decode ── -->
 				<div class="enc-panel" id="enc-panel-html">
 					<div class="enc-io">
 						<div class="enc-col">
@@ -3074,7 +3218,6 @@
 				</div>
 			</div>
 		</main>
-		<!-- Link Cleaner -->
 		<main id="linkcleaner-wrapper" class="view-wrapper hidden">
 			<div class="lc-container fade-in">
 				<div class="lc-header">
@@ -3107,7 +3250,6 @@
 				<div class="lc-credit"> Link Cleaner is based on <a href="https://github.com/corbindavenport/link-cleaner" target="_blank" rel="noopener noreferrer">Link Cleaner</a> by <a href="https://github.com/corbindavenport" target="_blank" rel="noopener noreferrer">Corbin Davenport</a>, licensed under GPLv3. </div>
 			</div>
 		</main>
-		<!-- Kanban Board -->
 		<main id="kanban-wrapper" class="view-wrapper hidden">
 			<div class="kb-header">
 				<div class="kb-header-left">
@@ -3123,11 +3265,9 @@
 				</div>
 			</div>
 			<div class="kb-board" id="kb-board">
-				<!-- Columns rendered by JS -->
-			</div>
+				</div>
 		</main>
 
-		<!-- Kanban Card Modal -->
 		<div id="kb-modal-overlay">
 			<div id="kb-modal" role="dialog" aria-labelledby="kb-modal-title">
 				<div class="kb-modal-header">
@@ -3180,7 +3320,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- Toast -->
 		<div id="toast" role="status" aria-live="polite"></div>
 		<script>
 			/* ═══════════════════════════════════════════════
@@ -3669,6 +3808,10 @@
 							rfDOM.textInput.value = ''; // Clear text if none exists in backup
 						}
 						checkRfInputContent();
+						
+						// --- NEW: Reload Readflow Notes
+						if (window._readflowNotesReload) window._readflowNotesReload();
+
 						// ----------------------------------------
 						// Re-render UI
 						renderHub();
@@ -3710,7 +3853,14 @@
 				delaySlider: document.getElementById('delay-slider'),
 				sizeVal: document.getElementById('size-val'),
 				speedVal: document.getElementById('speed-val'),
-				delayVal: document.getElementById('delay-val')
+				delayVal: document.getElementById('delay-val'),
+
+				// Notes Feature Elements
+				btnViewNotes: document.getElementById('btn-view-notes'),
+				btnSaveNote: document.getElementById('btn-save-note'),
+				notesOverlay: document.getElementById('rf-notes-overlay'),
+				btnCloseNotes: document.getElementById('btn-close-notes'),
+				notesList: document.getElementById('rf-notes-list'),
 			};
 			const DEFAULT_SETTINGS = {
 				font: "'Source Serif 4', serif",
@@ -3739,6 +3889,9 @@
 				touchStartY: 0
 			};
 
+			const RF_NOTES_KEY = 'liantools_rf_notes';
+			let rfNotes = [];
+
 			function initReadflow() {
 				const saved = localStorage.getItem('readflow_prefs');
 				if (saved) {
@@ -3751,6 +3904,29 @@
 				}
 				applyRfSettingsToUI();
 				updateRfSettingsVars();
+				
+				// Notes Feature Initialization
+				try {
+					const storedNotes = localStorage.getItem(RF_NOTES_KEY);
+					if (storedNotes) rfNotes = JSON.parse(storedNotes);
+				} catch(e) {}
+
+				rfDOM.btnSaveNote.addEventListener('click', saveRfNote);
+				rfDOM.btnViewNotes.addEventListener('click', () => {
+					renderRfNotes();
+					rfDOM.notesOverlay.classList.add('active');
+				});
+				rfDOM.btnCloseNotes.addEventListener('click', () => rfDOM.notesOverlay.classList.remove('active'));
+				rfDOM.notesOverlay.addEventListener('click', (e) => {
+					if (e.target === rfDOM.notesOverlay) rfDOM.notesOverlay.classList.remove('active');
+				});
+				window._readflowNotesReload = function() {
+					try {
+						const storedNotes = localStorage.getItem(RF_NOTES_KEY);
+						if (storedNotes) rfNotes = JSON.parse(storedNotes);
+					} catch(e) {}
+				};
+
 				const savedProgress = loadProgress();
 				if (savedProgress && savedProgress.text) rfDOM.textInput.value = savedProgress.text;
 				checkRfInputContent();
@@ -3813,6 +3989,78 @@
 					e.preventDefault();
 					}
 				});
+
+			function saveRfNote() {
+				const text = rfDOM.textInput.value.trim();
+				if (!text) return;
+				const defaultTitle = text.substring(0, 30).replace(/\n/g, ' ') + (text.length > 30 ? '...' : '');
+				const title = prompt('Enter a title for this note:', defaultTitle);
+				if (title === null) return; 
+				
+				const note = {
+					id: Date.now().toString(),
+					title: title.trim() || 'Untitled',
+					text: text,
+					date: new Date().toLocaleDateString()
+				};
+				rfNotes.unshift(note);
+				localStorage.setItem(RF_NOTES_KEY, JSON.stringify(rfNotes));
+				showToast('Note saved successfully');
+			}
+
+			function renderRfNotes() {
+				rfDOM.notesList.innerHTML = '';
+				if (rfNotes.length === 0) {
+					rfDOM.notesList.innerHTML = '<div class="rf-notes-empty">No saved notes found.</div>';
+					return;
+				}
+				
+				rfNotes.forEach(note => {
+					const item = document.createElement('div');
+					item.className = 'rf-note-item';
+					
+					const info = document.createElement('div');
+					info.className = 'rf-note-info';
+					
+					const titleEl = document.createElement('div');
+					titleEl.className = 'rf-note-title';
+					titleEl.textContent = note.title;
+					
+					const metaEl = document.createElement('div');
+					metaEl.className = 'rf-note-meta';
+					metaEl.textContent = `${note.date} • ${note.text.length.toLocaleString()} chars`;
+					
+					info.append(titleEl, metaEl);
+					
+					const actions = document.createElement('div');
+					actions.className = 'rf-note-actions';
+					
+					const loadBtn = document.createElement('button');
+					loadBtn.className = 'rf-note-btn load';
+					loadBtn.textContent = 'Load';
+					loadBtn.addEventListener('click', () => {
+						rfDOM.textInput.value = note.text;
+						checkRfInputContent();
+						rfDOM.notesOverlay.classList.remove('active');
+						showToast('Note loaded into editor');
+					});
+					
+					const delBtn = document.createElement('button');
+					delBtn.className = 'rf-note-btn del';
+					delBtn.textContent = 'Delete';
+					delBtn.addEventListener('click', () => {
+						if (confirm(`Delete note "${note.title}"?`)) {
+							rfNotes = rfNotes.filter(n => n.id !== note.id);
+							localStorage.setItem(RF_NOTES_KEY, JSON.stringify(rfNotes));
+							renderRfNotes();
+						}
+					});
+					
+					actions.append(loadBtn, delBtn);
+					item.append(info, actions);
+					rfDOM.notesList.appendChild(item);
+				});
+			}
 				
 			function applyRfSettingsToUI() {
 				rfDOM.fontSelect.value = rfSettings.font;
@@ -3839,6 +4087,7 @@
 				const len = rfDOM.textInput.value.trim().length;
 				rfDOM.charCount.textContent = `${len.toLocaleString()} characters`;
 				rfDOM.btnStart.disabled = len === 0;
+				rfDOM.btnSaveNote.disabled = len === 0;
 				checkResumeBanner();
 			}
 			const RF_SAVE_KEY = 'readflow_progress';
