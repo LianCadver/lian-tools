@@ -626,6 +626,16 @@
 			}
 
 			/* ─── READFLOW ─── */
+			#readflow-wrapper {
+				-webkit-user-select: none;
+				user-select: none;
+			}
+
+			#text-input {
+				-webkit-user-select: auto;
+				user-select: auto;
+			}
+			
 			#progress-container {
 				position: fixed;
 				top: var(--nav-height);
@@ -3798,6 +3808,12 @@
 				});
 			}
 
+			document.addEventListener('contextmenu', (e) => {
+				if (rfState.isReadingView && isValidRfTarget(e)) {
+					e.preventDefault();
+					}
+				});
+				
 			function applyRfSettingsToUI() {
 				rfDOM.fontSelect.value = rfSettings.font;
 				rfDOM.sizeSlider.value = rfSettings.fontSize;
