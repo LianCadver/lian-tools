@@ -20,8 +20,8 @@ A lightweight, local-first toolbox for reading, text processing, encoding, and p
 
 ## Usage
 Because Lian Tools is built with vanilla web technologies and relies strictly on client-side storage, no build steps or local servers are required.
- 1. Open either from https://liantools.pages.dev or https://liancadver.github.io/lian-tools/
- 2. Or open index.html in any modern web browser
+ 1. Open from https://liantools.pages.dev
+ 2. Or download repository as a .zip file, extract to a folder and run index.html in any modern web browser
 
 ## Privacy
 Lian Tools runs entirely in your browser.
