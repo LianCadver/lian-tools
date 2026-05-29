@@ -391,6 +391,12 @@
 				background: var(--focus-ring);
 			}
 
+			.data-btn-danger:hover {
+				color: var(--error);
+				border-color: var(--error);
+				background: var(--focus-ring);
+			}
+
 			.data-btn-label {
 				display: none;
 			}
@@ -2911,6 +2917,13 @@
 							</svg>
 							<span class="data-btn-label">Import</span>
 						</button>
+						<button id="btn-reset-data" class="data-btn data-btn-danger" aria-label="Reset all data">
+							<svg viewBox="0 0 24 24">
+								<polyline points="1 4 1 10 7 10" />
+								<path d="M3.51 15a9 9 0 1 0 .49-4" />
+							</svg>
+							<span class="data-btn-label">Reset</span>
+						</button>
 						<input type="file" id="import-file-input" accept=".json" style="display:none" aria-hidden="true" />
 					</div>
 				</div>
@@ -3127,6 +3140,10 @@
 					<button class="enc-tab" data-tab="base64" role="tab">Base64</button>
 					<button class="enc-tab" data-tab="url" role="tab">URL</button>
 					<button class="enc-tab" data-tab="html" role="tab">HTML Entities</button>
+					<button class="enc-tab" data-tab="morse-intl" role="tab">Morse (Intl)</button>
+					<button class="enc-tab" data-tab="morse-jp" role="tab">Morse (JP)</button>
+					<button class="enc-tab" data-tab="morse-ru" role="tab">Morse (RU)</button>
+					<button class="enc-tab" data-tab="lian" role="tab">Lian</button>
 				</div>
 				<div class="enc-panel active" id="enc-panel-base">
 					<div class="enc-base-grid" id="enc-base-grid">
@@ -3217,6 +3234,94 @@
 					<div class="enc-error-msg" id="enc-html-error"></div>
 				</div>
 			</div>
+		<!-- ═══ MORSE INTERNATIONAL ═══ -->
+				<div class="enc-panel" id="enc-panel-morse-intl">
+					<div class="enc-io">
+						<div class="enc-col">
+							<span class="enc-col-label">Input</span>
+							<textarea class="enc-textarea" id="enc-morse-intl-input" placeholder="Text or Morse (dots/dashes)…" spellcheck="false"></textarea>
+							<div class="enc-actions">
+								<button class="enc-action-btn primary" id="enc-morse-intl-encode">Encode →</button>
+								<button class="enc-action-btn primary" id="enc-morse-intl-decode">← Decode</button>
+								<button class="enc-swap-btn" id="enc-morse-intl-swap">⇅ Swap</button>
+							</div>
+						</div>
+						<div class="enc-col">
+							<span class="enc-col-label">Output</span>
+							<textarea class="enc-textarea" id="enc-morse-intl-output" readonly placeholder="Result will appear here…" spellcheck="false"></textarea>
+							<div class="enc-copy-row">
+								<button class="enc-copy-btn" id="enc-morse-intl-copy">Copy</button>
+							</div>
+						</div>
+					</div>
+					<div class="enc-error-msg" id="enc-morse-intl-error"></div>
+				</div>
+				<!-- ═══ MORSE JAPANESE (Wabun) ═══ -->
+				<div class="enc-panel" id="enc-panel-morse-jp">
+					<div class="enc-io">
+						<div class="enc-col">
+							<span class="enc-col-label">Input</span>
+							<textarea class="enc-textarea" id="enc-morse-jp-input" placeholder="Katakana or Wabun Morse…" spellcheck="false"></textarea>
+							<div class="enc-actions">
+								<button class="enc-action-btn primary" id="enc-morse-jp-encode">Encode →</button>
+								<button class="enc-action-btn primary" id="enc-morse-jp-decode">← Decode</button>
+								<button class="enc-swap-btn" id="enc-morse-jp-swap">⇅ Swap</button>
+							</div>
+						</div>
+						<div class="enc-col">
+							<span class="enc-col-label">Output</span>
+							<textarea class="enc-textarea" id="enc-morse-jp-output" readonly placeholder="Result will appear here…" spellcheck="false"></textarea>
+							<div class="enc-copy-row">
+								<button class="enc-copy-btn" id="enc-morse-jp-copy">Copy</button>
+							</div>
+						</div>
+					</div>
+					<div class="enc-error-msg" id="enc-morse-jp-error"></div>
+				</div>
+				<!-- ═══ MORSE RUSSIAN (CW) ═══ -->
+				<div class="enc-panel" id="enc-panel-morse-ru">
+					<div class="enc-io">
+						<div class="enc-col">
+							<span class="enc-col-label">Input</span>
+							<textarea class="enc-textarea" id="enc-morse-ru-input" placeholder="Cyrillic text or Russian Morse…" spellcheck="false"></textarea>
+							<div class="enc-actions">
+								<button class="enc-action-btn primary" id="enc-morse-ru-encode">Encode →</button>
+								<button class="enc-action-btn primary" id="enc-morse-ru-decode">← Decode</button>
+								<button class="enc-swap-btn" id="enc-morse-ru-swap">⇅ Swap</button>
+							</div>
+						</div>
+						<div class="enc-col">
+							<span class="enc-col-label">Output</span>
+							<textarea class="enc-textarea" id="enc-morse-ru-output" readonly placeholder="Result will appear here…" spellcheck="false"></textarea>
+							<div class="enc-copy-row">
+								<button class="enc-copy-btn" id="enc-morse-ru-copy">Copy</button>
+							</div>
+						</div>
+					</div>
+					<div class="enc-error-msg" id="enc-morse-ru-error"></div>
+				</div>
+				<!-- ═══ LIAN CIPHER ═══ -->
+				<div class="enc-panel" id="enc-panel-lian">
+					<div class="enc-io">
+						<div class="enc-col">
+							<span class="enc-col-label">Input</span>
+							<textarea class="enc-textarea" id="enc-lian-input" placeholder="Plain text or lian… code…" spellcheck="false"></textarea>
+							<div class="enc-actions">
+								<button class="enc-action-btn primary" id="enc-lian-encode">Encode →</button>
+								<button class="enc-action-btn primary" id="enc-lian-decode">← Decode</button>
+								<button class="enc-swap-btn" id="enc-lian-swap">⇅ Swap</button>
+							</div>
+						</div>
+						<div class="enc-col">
+							<span class="enc-col-label">Output</span>
+							<textarea class="enc-textarea" id="enc-lian-output" readonly placeholder="Result will appear here…" spellcheck="false"></textarea>
+							<div class="enc-copy-row">
+								<button class="enc-copy-btn" id="enc-lian-copy">Copy</button>
+							</div>
+						</div>
+					</div>
+					<div class="enc-error-msg" id="enc-lian-error"></div>
+				</div>
 		</main>
 		<main id="linkcleaner-wrapper" class="view-wrapper hidden">
 			<div class="lc-container fade-in">
@@ -3323,10 +3428,10 @@
 		<div id="toast" role="status" aria-live="polite"></div>
 		<script>
 			/* ═══════════════════════════════════════════════
-       LIAN TOOLS — Main Script
-       Features: hub, readflow, streamcord
-       QOL: pin, sort (default/manual/az/za), search, import/export
-    ═══════════════════════════════════════════════ */
+			   LIAN TOOLS — Main Script
+			   Features: hub, readflow, streamcord
+			   QOL: pin, sort (default/manual/az/za), search, import/export
+			═══════════════════════════════════════════════ */
 			/* ─── TOOL REGISTRY ─────────────────────────────
 			   Add new tools here. Each entry needs:
 			     id       → unique key, used for routing
@@ -3388,6 +3493,7 @@
 				hubSort: document.getElementById('hub-sort'),
 				btnExport: document.getElementById('btn-export'),
 				btnImport: document.getElementById('btn-import'),
+				btnResetData: document.getElementById('btn-reset-data'),
 				importFileInput: document.getElementById('import-file-input'),
 				toast: document.getElementById('toast')
 			};
@@ -3509,7 +3615,6 @@
 			if (!hubState.pinned) hubState.pinned = [];
 			if (!hubState.order) hubState.order = TOOLS.map(t => t.id);
 			if (!hubState.sort) hubState.sort = 'default';
-			// Sync sort select to persisted value
 			dom.hubSort.value = hubState.sort;
 			/* ─── SEARCH STATE ───────────────────────────── */
 			let hubSearchQuery = '';
@@ -3788,7 +3893,7 @@
 						// Reload theme
 						currentTheme = localStorage.getItem('liantools_theme') || 'light';
 						applyTheme();
-						// --- NEW: Reload Readflow Preferences ---
+						// Reload Readflow preferences
 						const savedPrefs = localStorage.getItem('readflow_prefs');
 						if (savedPrefs) {
 							try {
@@ -3800,19 +3905,16 @@
 							applyRfSettingsToUI();
 							updateRfSettingsVars();
 						}
-						// --- NEW: Reload Readflow Progress & Text ---
+						// Reload Readflow progress & text
 						const savedProgress = loadProgress();
 						if (savedProgress && savedProgress.text) {
 							rfDOM.textInput.value = savedProgress.text;
 						} else {
-							rfDOM.textInput.value = ''; // Clear text if none exists in backup
+							rfDOM.textInput.value = '';
 						}
 						checkRfInputContent();
-						
-						// --- NEW: Reload Readflow Notes
+						// Reload Readflow notes
 						if (window._readflowNotesReload) window._readflowNotesReload();
-
-						// ----------------------------------------
 						// Re-render UI
 						renderHub();
 						if (window._kanbanReload) window._kanbanReload();
@@ -3822,8 +3924,42 @@
 					}
 				};
 				reader.readAsText(file);
-				// Reset so the same file can be imported again if needed
+				// Reset so the same file can be re-imported if needed
 				dom.importFileInput.value = '';
+			});
+			/* ─── RESET DATA ─────────────────────────────── */
+			/**
+			 * Reset: clear all app keys from localStorage, then
+			 * reinitialise hub state and re-render from scratch.
+			 */
+			dom.btnResetData.addEventListener('click', () => {
+				if (!confirm('Reset all local data? This will clear your hub settings, Readflow notes & progress, Kanban board, and preferences. This cannot be undone.')) return;
+				const keysToRemove = [];
+				for (let i = 0; i < localStorage.length; i++) {
+					const key = localStorage.key(i);
+					if (key && (key.startsWith('liantools') || key === 'readflow_prefs' || key === 'readflow_progress')) {
+						keysToRemove.push(key);
+					}
+				}
+				keysToRemove.forEach(k => localStorage.removeItem(k));
+				// Reinitialise hub state
+				hubState = { pinned: [], order: TOOLS.map(t => t.id), sort: 'default' };
+				dom.hubSort.value = 'default';
+				// Reset theme
+				currentTheme = 'light';
+				applyTheme();
+				// Reset Readflow preferences
+				rfSettings = { ...DEFAULT_SETTINGS };
+				applyRfSettingsToUI();
+				updateRfSettingsVars();
+				// Clear Readflow text & notes
+				rfDOM.textInput.value = '';
+				rfNotes = [];
+				checkRfInputContent();
+				// Re-render UI
+				renderHub();
+				if (window._kanbanReload) window._kanbanReload();
+				showToast('🗑️ All data reset');
 			});
 			/* ═══════════════════════════════════════════════
 			   READFLOW FEATURE
@@ -3904,8 +4040,7 @@
 				}
 				applyRfSettingsToUI();
 				updateRfSettingsVars();
-				
-				// Notes Feature Initialization
+
 				try {
 					const storedNotes = localStorage.getItem(RF_NOTES_KEY);
 					if (storedNotes) rfNotes = JSON.parse(storedNotes);
@@ -3987,16 +4122,16 @@
 			document.addEventListener('contextmenu', (e) => {
 				if (rfState.isReadingView && isValidRfTarget(e)) {
 					e.preventDefault();
-					}
-				});
+				}
+			});
 
 			function saveRfNote() {
 				const text = rfDOM.textInput.value.trim();
 				if (!text) return;
 				const defaultTitle = text.substring(0, 30).replace(/\n/g, ' ') + (text.length > 30 ? '...' : '');
 				const title = prompt('Enter a title for this note:', defaultTitle);
-				if (title === null) return; 
-				
+				if (title === null) return;
+
 				const note = {
 					id: Date.now().toString(),
 					title: title.trim() || 'Untitled',
@@ -4957,6 +5092,211 @@
 									return htmlHelper.value;
 								}
 						});
+						/* ─────────────────────────────────────────
+				   MORSE — INTERNATIONAL (ITU)
+				───────────────────────────────────────── */
+				const MORSE_INTL = {
+					'a':'.-','b':'-...','c':'-.-.','d':'-..','e':'.','f':'..-.','g':'--.','h':'....','i':'..','j':'.---',
+					'k':'-.-','l':'.-..','m':'--','n':'-.','o':'---','p':'.--.','q':'--.-','r':'.-.','s':'...','t':'-',
+					'u':'..-','v':'...-','w':'.--','x':'-..-','y':'-.--','z':'--..',
+					'0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.',
+					'.':'.-.-.-',',':'--..--','?':'..--..','\'':'.----.','!':'-.-.--','/':'-..-.','(':'-.--.',')':'-.--.-',
+					'&':'.-...',':':'---...',';':'-.-.-.','=':'-...-','+':'.-.-.', '-':'-....-','_':'..--.-','"':'.-..-.','$':'...-..-','@':'.--.-.'
+				};
+				const MORSE_INTL_REV = Object.fromEntries(Object.entries(MORSE_INTL).map(([k,v])=>[v,k]));
+				makePanel({
+					inputId:'enc-morse-intl-input', outputId:'enc-morse-intl-output',
+					errorId:'enc-morse-intl-error', encodeId:'enc-morse-intl-encode',
+					decodeId:'enc-morse-intl-decode', swapId:'enc-morse-intl-swap', copyId:'enc-morse-intl-copy',
+					encodeFn: val => val.toLowerCase().split('').map(c => {
+						if (c === ' ') return '/';
+						const code = MORSE_INTL[c];
+						if (!code) throw new Error(`Character '${c}' not in International Morse`);
+						return code;
+					}).join(' '),
+					decodeFn: val => val.trim().split(/\s*\/\s*/).map(word =>
+						word.trim().split(/\s+/).map(tok => {
+							const ch = MORSE_INTL_REV[tok];
+							if (!ch) throw new Error(`Unknown Morse sequence: '${tok}'`);
+							return ch;
+						}).join('')
+					).join(' ')
+				});
+				/* ─────────────────────────────────────────
+				   MORSE — JAPANESE (Wabun code)
+				   Covers full katakana set per ITU-R M.1677
+				───────────────────────────────────────── */
+				// Wabun (Japanese Morse) — ITU-R M.1677-1
+				// Encoded with '|' as token separator so dakuten codes (which contain
+				// an internal space) are unambiguous during decode.
+				const MORSE_JP_CLEAN = {
+					'ア':'--',   'イ':'.-',    'ウ':'..-',   'エ':'-.---', 'オ':'.-...',
+					'カ':'.-..', 'キ':'-.-.',  'ク':'...-',  'ケ':'-.-',   'コ':'----',
+					'サ':'-.-.-','シ':'--.-.',  'ス':'---.-', 'セ':'.---.', 'ソ':'---.',
+					'タ':'-.',   'チ':'..-.',   'ツ':'.--.',  'テ':'.-.--', 'ト':'..-..', 
+					'ナ':'-.-.',  'ニ':'-.',    'ヌ':'....', 'ネ':'--.-',  'ノ':'..-.',
+					'ハ':'-...',  'ヒ':'--..-', 'フ':'--..', 'ヘ':'.',     'ホ':'-.',
+					'マ':'-..-',  'ミ':'..-.-', 'ム':'-',    'メ':'-...-', 'モ':'-..-.',
+					'ヤ':'.--',   'ユ':'-..--', 'ヨ':'--',
+					'ラ':'...',   'リ':'--.',   'ル':'-..-', 'レ':'---',   'ロ':'.-.-',
+					'ワ':'-.-',   'ヲ':'.---',  'ン':'.-.-.',
+					// Dakuten (voiced) — nigori mark appended as space+dot in CW
+					'ガ':'.-.. .', 'ギ':'-.-. .', 'グ':'...- .', 'ゲ':'-.- .', 'ゴ':'---- .',
+					'ザ':'-.-.- .','ジ':'--.-. .','ズ':'---.- .','ゼ':'.---. .','ゾ':'---. .',
+					'ダ':'-. .',   'ヂ':'..-. .', 'ヅ':'.--. .', 'デ':'.-.-- .','ド':'..-..- .',
+					'バ':'-... .', 'ビ':'--..- .','ブ':'--.. .', 'ベ':'. .',   'ボ':'-. .',
+					// Handakuten (semi-voiced)
+					'パ':'-... ..','ピ':'--..- ..','プ':'--.. ..','ペ':'. ..', 'ポ':'-. ..',
+					// Small kana (Wabun uses same code as full-size)
+					'ッ':'.--.',   'ャ':'.--',   'ュ':'-..--', 'ョ':'--',
+					// Punctuation
+					'、':'.-.-.-', '。':'.-.-.-', 'ー':'.--.-',  '？':'..--..'
+				};
+				// Build reverse map — where codes collide, later entries win (acceptable for decode)
+				// Build reverse map — first declaration wins for ambiguous codes (e.g. ア/ヨ both '--')
+				const MORSE_JP_REV = {};
+				for (const [k,v] of Object.entries(MORSE_JP_CLEAN)) {
+					if (!(v in MORSE_JP_REV)) MORSE_JP_REV[v] = k;
+				}
+				makePanel({
+					inputId:'enc-morse-jp-input', outputId:'enc-morse-jp-output',
+					errorId:'enc-morse-jp-error', encodeId:'enc-morse-jp-encode',
+					decodeId:'enc-morse-jp-decode', swapId:'enc-morse-jp-swap', copyId:'enc-morse-jp-copy',
+					// Encode: kana separated by '|' within words, words by ' / '
+					encodeFn: val => {
+						const words = [];
+						let current = [];
+						for (const c of val) {
+							if (c === ' ') { words.push(current.join('|')); current = []; continue; }
+							const code = MORSE_JP_CLEAN[c];
+							if (!code) throw new Error(`Character '${c}' not in Wabun (Japanese Morse)`);
+							current.push(code);
+						}
+						if (current.length) words.push(current.join('|'));
+						return words.join(' / ');
+					},
+					// Decode: split on '/' for words, '|' for kana tokens
+					decodeFn: val => val.trim().split(/\s*\/\s*/).map(word =>
+						word.trim().split('|').map(tok => {
+							tok = tok.trim();
+							if (!tok) return '';
+							const ch = MORSE_JP_REV[tok];
+							if (ch === undefined) throw new Error(`Unknown Wabun sequence: '${tok}'`);
+							return ch;
+						}).join('')
+					).join(' ')
+				});
+				/* ─────────────────────────────────────────
+				   MORSE — RUSSIAN (Cyrillic CW)
+				   Per ITU-R M.1677-1 Appendix 2
+				───────────────────────────────────────── */
+				const MORSE_RU = {
+					'а':'.-','б':'-...','в':'.--','г':'--.','д':'-..','е':'.','ж':'...-','з':'--..','и':'..','й':'.---',
+					'к':'-.-','л':'.-..','м':'--','н':'-.','о':'---','п':'.--.','р':'.-.','с':'...','т':'-','у':'..-',
+					'ф':'..-.','х':'....','ц':'-.-.','ч':'---.','ш':'----','щ':'--.-','ъ':'.--.-.','ы':'-.--','ь':'-..-','э':'..-..','ю':'..--','я':'.-.-',
+					'0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.',
+					'.':'.-.-.-',',':'--..--','?':'..--..','!':'--..--','-':'-....-','/':'-..-.','(':'-.--.',')':'-.--.-',':':'---...',';':'-.-.-.','"':'.-..-.','@':'.--.-.'
+				};
+				const MORSE_RU_REV = Object.fromEntries(Object.entries(MORSE_RU).map(([k,v])=>[v,k]));
+				makePanel({
+					inputId:'enc-morse-ru-input', outputId:'enc-morse-ru-output',
+					errorId:'enc-morse-ru-error', encodeId:'enc-morse-ru-encode',
+					decodeId:'enc-morse-ru-decode', swapId:'enc-morse-ru-swap', copyId:'enc-morse-ru-copy',
+					encodeFn: val => val.toLowerCase().split('').map(c => {
+						if (c === ' ') return '/';
+						const code = MORSE_RU[c];
+						if (!code) throw new Error(`Character '${c}' not in Russian Morse`);
+						return code;
+					}).join(' '),
+					decodeFn: val => val.trim().split(/\s*\/\s*/).map(word =>
+						word.trim().split(/\s+/).map(tok => {
+							const ch = MORSE_RU_REV[tok];
+							if (!ch) throw new Error(`Unknown Russian Morse sequence: '${tok}'`);
+							return ch;
+						}).join('')
+					).join(' ')
+				});
+				/* ─────────────────────────────────────────
+				   LIAN CIPHER
+				   • Prefix: "lian" (4 chars)
+				   • Each letter → 3-char code (all lowercase a–z)
+				   • Space   → "space"
+				   • Digits  → "zero","one","two",...,"nine"
+				   • Symbols → named: "period","comma","question","exclamation",
+				               "apostrophe","quote","slash","backslash","hyphen",
+				               "underscore","at","hash","dollar","percent","amp",
+				               "plus","equals","lt","gt","lparen","rparen",
+				               "lbracket","rbracket","lbrace","rbrace","colon",
+				               "semicolon","tilde","pipe","caret","asterisk","backtick"
+				───────────────────────────────────────── */
+				const LIAN_ALPHA = {
+					'a':'mqw','b':'xpr','c':'vbn','d':'jkl','e':'fgd','f':'czs','g':'thy','h':'rqp',
+					'i':'wlm','j':'snb','k':'dfc','l':'ghj','m':'ktv','n':'pyz','o':'bxc','p':'nmq',
+					'q':'lds','r':'wjk','s':'rvt','t':'cfg','u':'hpn','v':'mzb','w':'qxy','x':'jvw',
+					'y':'tkn','z':'rph'
+				};
+				const LIAN_ALPHA_REV = Object.fromEntries(Object.entries(LIAN_ALPHA).map(([k,v])=>[v,k]));
+				const LIAN_SPECIAL = {
+					' ':'space','0':'zero','1':'one','2':'two','3':'three','4':'four',
+					'5':'five','6':'six','7':'seven','8':'eight','9':'nine',
+					'.':'period',',':'comma','?':'question','!':'exclamation',
+					"'":'apostrophe','"':'quote','/':'slash','\\':'backslash','-':'hyphen',
+					'_':'underscore','@':'at','#':'hash','$':'dollar','%':'percent',
+					'&':'amp','+':'plus','=':'equals','<':'lt','>':'gt',
+					'(':'lparen',')':'rparen','[':'lbracket',']':'rbracket',
+					'{':'lbrace','}':'rbrace',':':'colon',';':'semicolon',
+					'~':'tilde','|':'pipe','^':'caret','*':'asterisk','`':'backtick'
+				};
+				const LIAN_SPECIAL_REV = Object.fromEntries(Object.entries(LIAN_SPECIAL).map(([k,v])=>[v,k]));
+				function lianEncode(val) {
+					let out = 'lian';
+					for (const ch of val) {
+						const lo = ch.toLowerCase();
+						if (LIAN_ALPHA[lo]) {
+							out += LIAN_ALPHA[lo];
+						} else if (LIAN_SPECIAL[ch] !== undefined) {
+							out += LIAN_SPECIAL[ch];
+						} else {
+							throw new Error(`Character '${ch}' cannot be encoded in Lian`);
+						}
+					}
+					return out;
+				}
+				function lianDecode(val) {
+					const raw = val.trim();
+					if (!raw.startsWith('lian')) throw new Error("Not a valid Lian string — must start with 'lian'");
+					let rest = raw.slice(4);
+					let out = '';
+					while (rest.length > 0) {
+						// Try special keywords first (longest match, up to 9 chars)
+						let matched = false;
+						for (let len = 9; len >= 2; len--) {
+							const chunk = rest.slice(0, len);
+							if (LIAN_SPECIAL_REV[chunk] !== undefined) {
+								out += LIAN_SPECIAL_REV[chunk];
+								rest = rest.slice(len);
+								matched = true;
+								break;
+							}
+						}
+						if (!matched) {
+							// Try 3-char alpha code
+							if (rest.length < 3) throw new Error(`Incomplete Lian sequence near end: '${rest}'`);
+							const code = rest.slice(0, 3);
+							if (LIAN_ALPHA_REV[code] === undefined) throw new Error(`Unknown Lian code: '${code}'`);
+							out += LIAN_ALPHA_REV[code];
+							rest = rest.slice(3);
+						}
+					}
+					return out;
+				}
+				makePanel({
+					inputId:'enc-lian-input', outputId:'enc-lian-output',
+					errorId:'enc-lian-error', encodeId:'enc-lian-encode',
+					decodeId:'enc-lian-decode', swapId:'enc-lian-swap', copyId:'enc-lian-copy',
+					encodeFn: lianEncode,
+					decodeFn: lianDecode
+				});
 				}
 				/* ═══════════════════════════════════════════════
        LINK CLEANER FEATURE
@@ -5704,7 +6044,7 @@
 					if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
 				});
 
-				/* ─── Boot ─── */
+				/* ─── BOOT ─────────────────────────────────── */
 				loadState();
 				render();
 				window._kanbanReload = function() { loadState(); render(); };
