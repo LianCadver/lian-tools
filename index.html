@@ -5270,7 +5270,7 @@
 					while (rest.length > 0) {
 						// Try special keywords first (longest match, up to 9 chars)
 						let matched = false;
-						for (let len = 9; len >= 2; len--) {
+						for (let len = 11; len >= 2; len--) {
 							const chunk = rest.slice(0, len);
 							if (LIAN_SPECIAL_REV[chunk] !== undefined) {
 								out += LIAN_SPECIAL_REV[chunk];
