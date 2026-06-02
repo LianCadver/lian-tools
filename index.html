@@ -5240,12 +5240,13 @@
 					' ':'space','0':'zero','1':'one','2':'two','3':'three','4':'four',
 					'5':'five','6':'six','7':'seven','8':'eight','9':'nine',
 					'.':'period',',':'comma','?':'question','!':'exclamation',
-					"'":'apostrophe','"':'quote','/':'slash','\\':'backslash','-':'hyphen',
+					"'":'apostrophe','’':'apostrophe','"':'quote','/':'slash','\\':'backslash','-':'hyphen',
 					'_':'underscore','@':'at','#':'hash','$':'dollar','%':'percent',
 					'&':'amp','+':'plus','=':'equals','<':'lt','>':'gt',
 					'(':'lparen',')':'rparen','[':'lbracket',']':'rbracket',
 					'{':'lbrace','}':'rbrace',':':'colon',';':'semicolon',
-					'~':'tilde','|':'pipe','^':'caret','*':'asterisk','`':'backtick'
+					'~':'tilde','|':'pipe','^':'caret','*':'asterisk','`':'backtick',
+					'\n':'newline', '\r':'return'
 				};
 				const LIAN_SPECIAL_REV = Object.fromEntries(Object.entries(LIAN_SPECIAL).map(([k,v])=>[v,k]));
 				function lianEncode(val) {
@@ -5253,7 +5254,9 @@
 					for (const ch of val) {
 						const lo = ch.toLowerCase();
 						if (LIAN_ALPHA[lo]) {
-							out += LIAN_ALPHA[lo];
+							// If the original character matches its lowercase version, keep the cipher lowercase. 
+							// Otherwise, convert the cipher to UPPERCASE.
+							out += (ch === lo) ? LIAN_ALPHA[lo] : LIAN_ALPHA[lo].toUpperCase();
 						} else if (LIAN_SPECIAL[ch] !== undefined) {
 							out += LIAN_SPECIAL[ch];
 						} else {
@@ -5283,8 +5286,12 @@
 							// Try 3-char alpha code
 							if (rest.length < 3) throw new Error(`Incomplete Lian sequence near end: '${rest}'`);
 							const code = rest.slice(0, 3);
-							if (LIAN_ALPHA_REV[code] === undefined) throw new Error(`Unknown Lian code: '${code}'`);
-							out += LIAN_ALPHA_REV[code];
+							const codeLower = code.toLowerCase();
+							if (LIAN_ALPHA_REV[codeLower] === undefined) throw new Error(`Unknown Lian code: '${code}'`);
+							
+							const letter = LIAN_ALPHA_REV[codeLower];
+							// Check if the ciphertext was uppercase, and restore case accordingly
+							out += (code === code.toUpperCase()) ? letter.toUpperCase() : letter;
 							rest = rest.slice(3);
 						}
 					}
