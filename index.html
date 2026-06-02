@@ -5218,16 +5218,6 @@
 				});
 				/* ─────────────────────────────────────────
 				   LIAN CIPHER
-				   • Prefix: "lian" (4 chars)
-				   • Each letter → 3-char code (all lowercase a–z)
-				   • Space   → "space"
-				   • Digits  → "zero","one","two",...,"nine"
-				   • Symbols → named: "period","comma","question","exclamation",
-				               "apostrophe","quote","slash","backslash","hyphen",
-				               "underscore","at","hash","dollar","percent","amp",
-				               "plus","equals","lt","gt","lparen","rparen",
-				               "lbracket","rbracket","lbrace","rbrace","colon",
-				               "semicolon","tilde","pipe","caret","asterisk","backtick"
 				───────────────────────────────────────── */
 				const LIAN_ALPHA = {
 					'a':'mqw','b':'xpr','c':'vbn','d':'jkl','e':'fgd','f':'czs','g':'thy','h':'rqp',
@@ -5237,16 +5227,16 @@
 				};
 				const LIAN_ALPHA_REV = Object.fromEntries(Object.entries(LIAN_ALPHA).map(([k,v])=>[v,k]));
 				const LIAN_SPECIAL = {
-					' ':'space','0':'zero','1':'one','2':'two','3':'three','4':'four',
-					'5':'five','6':'six','7':'seven','8':'eight','9':'nine',
-					'.':'period',',':'comma','?':'question','!':'exclamation',
-					"'":'apostrophe','’':'apostrophe','"':'quote','/':'slash','\\':'backslash','-':'hyphen',
-					'_':'underscore','@':'at','#':'hash','$':'dollar','%':'percent',
-					'&':'amp','+':'plus','=':'equals','<':'lt','>':'gt',
-					'(':'lparen',')':'rparen','[':'lbracket',']':'rbracket',
-					'{':'lbrace','}':'rbrace',':':'colon',';':'semicolon',
-					'~':'tilde','|':'pipe','^':'caret','*':'asterisk','`':'backtick',
-					'\n':'newline', '\r':'return'
+					' ':'qva','0':'pln','1':'mua','2':'xir','3':'zqo','4':'nht',
+					'5':'ite','6':'zhr','7':'qey','8':'gds','9':'amn',
+					'.':'yrn',',':'jqu','?':'bve','!':'kmr',
+					"'":'iro','’':'xoq','"':'gow','/':'gju','\\':'dey','-':'vur',
+					'_':'lom','@':'kha','#':'erx','$':'gjr','%':'iun',
+					'&':'amp','+':'sie','=':'tie','<':'mcu','>':'pok',
+					'(':'qgt',')':'vfe','[':'swq',']':'bvo',
+					'{':'reb','}':'xst',':':'cui',';':'kqv',
+					'~':'trn','|':'zip','^':'smi','*':'tre','`':'bcr',
+					'\n':'nvu', '\r':'tfv'
 				};
 				const LIAN_SPECIAL_REV = Object.fromEntries(Object.entries(LIAN_SPECIAL).map(([k,v])=>[v,k]));
 				function lianEncode(val) {
